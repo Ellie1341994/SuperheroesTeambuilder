@@ -6,6 +6,11 @@ const TeamPowerstatsContainer: any = styled.div`
   height: 85vh;
   width: 20%;
   border: 1px solid #333;
+  @media (max-width: 576px) {
+    /* matches "sm" react boostrap width value */
+    width: 90%;
+    height: 50vh;
+  }
 `;
 const PowerstatsPanelTitle: any = styled.h2``;
 export const TeamPowerstats: any = () => {

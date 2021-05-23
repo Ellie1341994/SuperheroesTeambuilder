@@ -8,5 +8,9 @@ export const AppName: any = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: bold;
-  font-size: ${window.innerWidth < 600 ? "2em" : "auto"};
+  @media (max-width: 576px) {
+    /* matches "sm" react boostrap width value */
+    font-size: 1.1em;
+    padding: 0%;
+  }
 `;

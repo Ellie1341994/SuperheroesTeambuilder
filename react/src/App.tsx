@@ -25,9 +25,7 @@ function App() {
     <ProvideAuth>
       <Router>
         <HelmetProvider>
-          <Helmet title="Superheroes Teambuilder">
-            <meta name="description" content="React Alkemy challenge" />
-          </Helmet>
+          <Helmet title="Superheroes Teambuilder" />
           <AppBody>
             <RoutePermissionController />
           </AppBody>

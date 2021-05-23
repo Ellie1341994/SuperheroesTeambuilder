@@ -1,10 +1,10 @@
-import { TopSection } from "./TopSection";
-import { BottomSection } from "./BottomSection";
+import { TopSection } from "./homePageComponents/TopSection";
+import { SuperheroesPanel } from "./homePageComponents/SuperheroesPanel";
 export const HomePage = () => {
   return (
     <>
       <TopSection />
-      <BottomSection />
+      <SuperheroesPanel />
     </>
   );
 };
