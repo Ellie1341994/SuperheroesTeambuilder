@@ -9,7 +9,7 @@ const Lobby: any = styled.div`
   height: 100vh;
   position: relative;
 `;
-export const LoginLobby: any = ({ history }: any) => (
+export const LoginPage: any = ({ history }: any) => (
   <Lobby>
     <AppName>Super Heroes Teambuilder</AppName>
     <AppForm
