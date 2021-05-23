@@ -9,14 +9,14 @@ import {
   Redirect,
 } from "react-router-dom";
 import "./App.css";
-import { AppMenu } from "./AppMenu";
 import { AppBody } from "./AppBody";
-import { LoginLobby } from "./LoginLobby";
-export const authenticationContext: any = createContext(null);
+import { LoginPage } from "./LoginPage";
+import { HomePage } from "./HomePage";
 interface AuthContextType {
   token: string;
   setToken: Function;
 }
+export const authenticationContext: any = createContext(null);
 function App() {
   const token: string = apiToken;
   const superheroApiBaseUrl: string = "https://superheroapi.com/api/" + token;
@@ -25,16 +25,11 @@ function App() {
     <ProvideAuth>
       <Router>
         <HelmetProvider>
-          <Helmet title="Superheroes Teambuilder" />
+          <Helmet title="Superheroes Teambuilder">
+            <meta name="description" content="React Alkemy challenge" />
+          </Helmet>
           <AppBody>
-            <Switch>
-              <RoutePermissionController>
-                {" "}
-                <Route strict={true} path="/login" render={LoginLobby} />
-                {/*passing AppMenu as a function throws a rule-of-hooks broken exception caused by useContext*/}
-                <Route strict={true} path="/home" render={() => <AppMenu />} />
-              </RoutePermissionController>
-            </Switch>
+            <RoutePermissionController />
           </AppBody>
         </HelmetProvider>
       </Router>
@@ -51,24 +46,28 @@ function ProvideAuth({ children }: any) {
 }
 function RoutePermissionController({ children }: any) {
   const context: AuthContextType = useContext(authenticationContext);
+  const isAuthenticated: boolean = !!context?.token;
+  let pathValue: string = isAuthenticated ? "/*" : "/login";
+  let component: any = isAuthenticated ? HomePage : LoginPage;
+  const Routes: any = ({ location }: any) => {
+    const inLoginPage: boolean = location.pathname.search("/login") >= 0;
+    if (
+      (!isAuthenticated && !inLoginPage) ||
+      (isAuthenticated && inLoginPage)
+    ) {
+      return <Redirect to={isAuthenticated ? "/home" : "/login"} />;
+    } else {
+      return (
+        <Switch>
+          <Route path={pathValue} render={component} />
+        </Switch>
+      );
+    }
+  };
   return (
-    <Route
+    <Route //index route
       path="/"
-      render={({ location }) => {
-        //don't miss the negation operator below
-        const inLoginPage: boolean = !(
-          location.pathname.search("/login") === -1
-        );
-        const isAuthenticated: boolean = !!context?.token;
-        if (
-          (!isAuthenticated && !inLoginPage) ||
-          (isAuthenticated && inLoginPage)
-        ) {
-          return <Redirect to={context?.token ? "/home" : "/login"} />;
-        } else {
-          return children;
-        }
-      }}
+      render={Routes}
     />
   );
 }
