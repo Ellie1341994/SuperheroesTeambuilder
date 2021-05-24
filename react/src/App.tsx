@@ -1,5 +1,4 @@
-import React, { useContext, createContext, useState } from "react";
-import apiToken from "./apiToken";
+import { useContext, createContext, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import {
@@ -12,15 +11,12 @@ import "./App.css";
 import { AppBody } from "./AppBody";
 import { LoginPage } from "./LoginPage";
 import { HomePage } from "./HomePage";
-interface AuthContextType {
+interface AuthContextProps {
   token: string;
   setToken: Function;
 }
 export const authenticationContext: any = createContext(null);
 function App() {
-  const token: string = apiToken;
-  const superheroApiBaseUrl: string = "https://superheroapi.com/api/" + token;
-  console.log(superheroApiBaseUrl);
   return (
     <ProvideAuth>
       <Router>
@@ -42,8 +38,8 @@ function ProvideAuth({ children }: any) {
     </authenticationContext.Provider>
   );
 }
-function RoutePermissionController({ children }: any) {
-  const context: AuthContextType = useContext(authenticationContext);
+function RoutePermissionController(_props: any) {
+  const context: AuthContextProps = useContext(authenticationContext);
   const isAuthenticated: boolean = !!context?.token;
   let pathValue: string = isAuthenticated ? "/*" : "/login";
   let component: any = isAuthenticated ? HomePage : LoginPage;
