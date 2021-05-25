@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { HeroCard } from "./HeroCard";
+import { SuperheroCard } from "./SuperheroCard";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -40,6 +40,12 @@ const BaseContainer: any = styled.div`
   height: 90vh;
 `;
 
+/**
+ * Takes a function that requests superheroes
+ *
+ * Note: this is a sketched doc
+ * @summary You can have superhero clones in the team
+ */
 export const SuperheroTeam: any = (props: any) => {
   const SuperHeroCards: any = () => {
     const cards: any = [];
@@ -56,7 +62,7 @@ export const SuperheroTeam: any = (props: any) => {
           }}
           key={"Col" + i}
         >
-          <HeroCard
+          <SuperheroCard
             id={"Card" + i}
             requestSuperhero={props.requestSuperheroData}
           />
