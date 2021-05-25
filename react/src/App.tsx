@@ -39,10 +39,10 @@ function ProvideAuth({ children }: any) {
   );
 }
 function RoutePermissionController(_props: any) {
-  const context: AuthContextProps = useContext(authenticationContext);
-  const isAuthenticated: boolean = !!context?.token;
+  const authContext: AuthContextProps = useContext(authenticationContext);
+  const isAuthenticated: boolean = !!authContext?.token;
   let pathValue: string = isAuthenticated ? "/*" : "/login";
-  let component: any = isAuthenticated ? HomePage : LoginPage;
+  let Component: any = isAuthenticated ? HomePage : LoginPage;
   const Routes: any = ({ location }: any) => {
     const inLoginPage: boolean = location.pathname.search("/login") >= 0;
     if (
@@ -53,7 +53,14 @@ function RoutePermissionController(_props: any) {
     } else {
       return (
         <Switch>
-          <Route path={pathValue} render={component} />
+          <Route
+            path={pathValue}
+            render={() => (
+              <Component
+                authContext={isAuthenticated ? undefined : authContext}
+              />
+            )}
+          />
         </Switch>
       );
     }
