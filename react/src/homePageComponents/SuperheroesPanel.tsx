@@ -85,11 +85,12 @@ export class SuperheroesPanel extends React.Component<
       // the type in the line above is wrong because response is not the property. responseStatus is.
       // TypeScript throws an error if I use responseStatus though, I don't know how to correct it.
       // It doesn't also recognize newSuperhero props
-      return {
+      const mainSuperheroicPackage: any = {
         data: superheroData.results ?? superheroData,
         addSuperhero: this.addSuperhero,
         removeSuperhero: this.removeSuperhero,
       };
+      return mainSuperheroicPackage;
     } catch (error) {
       console.log(error);
     }
