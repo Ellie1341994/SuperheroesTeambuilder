@@ -1,5 +1,5 @@
 import React from "react";
-import { SuperHeroTeam } from "./SuperHeroTeam";
+import { SuperheroTeam } from "./SuperHeroTeam";
 import superheroesApiToken from "../superheroApiToken";
 import axios from "axios";
 import { SuperheroProps } from "./SuperheroProps";
@@ -19,13 +19,19 @@ export class SuperheroesPanel extends React.Component<
     this.addSuperhero = this.addSuperhero.bind(this);
     this.removeSuperhero = this.removeSuperhero.bind(this);
     this.computeTeamPowerstats = this.computeTeamPowerstats.bind(this);
+    const MAX_SUPERHEROES: number = 6;
     const superheroesInTheTeam: any = JSON.parse(
-      localStorage.getItem("userSuperheroesTeam") ?? `{}`
+      localStorage.getItem("userSuperheroesTeam") ??
+        JSON.stringify(Array(MAX_SUPERHEROES))
     );
     this.state = {
       superheroesInTheTeam,
-      teamPowerstats: this.computeTeamPowerstats(),
+      teamPowerstats: {},
     };
+    console.log("constructor", this.state);
+  }
+  componentDidMount() {
+    this.computeTeamPowerstats();
   }
   componentDidUpdate(_previousProps: any, _previousState: any) {
     if (
@@ -35,23 +41,25 @@ export class SuperheroesPanel extends React.Component<
         "userSuperheroesTeam",
         JSON.stringify(this.state.superheroesInTheTeam)
       );
+      this.computeTeamPowerstats();
+      console.log(this.state);
     }
   }
-  async componentDidMount() {}
-  addSuperhero(superheroData: SuperheroProps) {
-    this.setState((_previousProps: any, _previousState: any) => {
-      _previousState.superheroesInTheTeam[superheroData.name] = superheroData;
-      return {
-        superheroesInTheTeam: _previousState, //updated previousState
-      };
+  addSuperhero(
+    superheroData: SuperheroProps,
+    positionInTheTeam: number | string
+  ) {
+    console.log(superheroData);
+    this.setState((state: any, _props: any) => {
+      state.superheroesInTheTeam[positionInTheTeam] = superheroData;
+      return state;
     });
+    console.log(this.state);
   }
-  removeSuperhero(name: string) {
-    this.setState((_previousProps: any, _previousState: any) => {
-      delete _previousState.superheroesInTheTeam[name];
-      return {
-        superheroesInTheTeam: _previousState, //updated previousState
-      };
+  removeSuperhero(id: number | string) {
+    this.setState((state: any, _props: any) => {
+      state.superheroesInTheTeam[id] = undefined;
+      return state;
     });
   }
   computeTeamPowerstats() {} //to do
@@ -68,29 +76,28 @@ export class SuperheroesPanel extends React.Component<
     try {
       const response: any = await axios.get(URL);
       console.log(response);
-      const { response: responseStatus, ...newSuperheroData } = response.data;
-      const newSuperhero: SuperheroProps = newSuperheroData;
+      const {
+        response: responseStatus,
+        "results-for": resultsFor,
+        ...superheroData
+      } = response.data;
       // .... :{ response: string; newSuperhero: SuperheroProps } = response.data;
       // the type in the line above is wrong because response is not the property. responseStatus is.
       // TypeScript throws an error if I use responseStatus though, I don't know how to correct it.
       // It doesn't also recognize newSuperhero props
-      if (identifierIsNumeric) {
-        console.log(newSuperhero);
-        this.addSuperhero(newSuperhero);
-        return undefined;
-      }
       return {
-        superheros: response.data.results,
+        data: superheroData.results ?? superheroData,
         addSuperhero: this.addSuperhero,
+        removeSuperhero: this.removeSuperhero,
       };
     } catch (error) {
       console.log(error);
-      return null;
     }
   }
   render() {
+    console.log(this.state);
     return (
-      <SuperHeroTeam
+      <SuperheroTeam
         teamMembersData={this.state.superheroesInTheTeam}
         teamPowerstatsData={this.state.teamPowerstats}
         requestSuperheroData={this.getSuperheroData}
