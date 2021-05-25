@@ -9,13 +9,18 @@ const Lobby: any = styled.div`
   height: 100vh;
   position: relative;
 `;
-export const LoginPage: any = ({ history }: any) => (
+export const LoginPage: any = ({ authContext, history }: any) => (
   <Lobby>
     <AppName>Super Heroes Teambuilder</AppName>
     <AppForm
-      type="auth"
-      URL="http://challenge-react.alkemy.org"
+      type="login"
       history={history}
+      initialValues={{
+        authContext,
+        email: "",
+        password: "",
+        url: "http://challenge-react.alkemy.org",
+      }}
     />
   </Lobby>
 );
