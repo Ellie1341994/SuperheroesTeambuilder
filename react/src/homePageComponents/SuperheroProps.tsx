@@ -15,6 +15,7 @@ export interface SuperHeroBiographyProps {
   publisher: string;
   alignment: string;
 }
+
 export interface SuperHeroAppearenceProps {
   gender: string;
   race: string;
@@ -27,6 +28,17 @@ export interface SuperHeroWorkProps {
   occupation: string;
   base: string;
 }
+/**
+ * @param   id  string;
+ * @param   name  string;
+ * @param   powerstats  SuperHeroPowerstatsProps;
+ * @param   biography  SuperHeroBiographyProps;
+ * @param   appearance  SuperHeroAppearenceProps;
+ * @param   work  SuperHeroWorkProps;
+ * @param  connections?  { "group-affiliation"  string; relatives  string;
+ *         };
+ * @param  image  { url  string; };
+ */
 export interface SuperheroProps {
   id: string;
   name: string;
