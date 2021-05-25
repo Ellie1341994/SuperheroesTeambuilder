@@ -3,61 +3,76 @@ import { HeroCard } from "./HeroCard";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-const TeamWrapper: any = styled.div`
+//import { TeamPowerstats } from "./TeamPowerstats";
+const TeamMembersWrapper: any = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  height: 90%;
+  height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
   @media (max-width: 576px) {
     /* matches "sm" react boostrap width value */
-    height: auto;
+    height: 90%;
   }
 `;
 const TeamContainer: any = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 0;
   padding: 0;
-  height: 85vh;
+  height: 90%;
+  width: 90%;
   border: 1px solid #333;
-  width: 70%;
   @media (max-width: 576px) {
     /* matches "sm" react boostrap width value */
-    width: 90%;
-    height: auto;
+    height: 100%;
   }
 `;
-const TeamTitle: any = styled.h2`
-  text-align: center;
-  width: 100%;
+const BaseContainer: any = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 0;
   padding: 0;
-  height: 10%;
-  @media (max-width: 576px) {
-    /* matches "sm" react boostrap width value */
-    height: auto;
-  }
+  height: 90vh;
 `;
-export const SuperHeroTeam: any = () => {
-  const SuperHeroes: any = () => {
-    const superheroes: any = [];
+
+export const SuperheroTeam: any = (props: any) => {
+  const SuperHeroCards: any = () => {
+    const cards: any = [];
     for (let i: number = 1; i <= 6; i++) {
-      const superhero: any = (
-        <Col key={"h" + i} as={HeroCard}>
-          {"Hero" + i}
+      const card: any = (
+        <Col
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 0,
+            margin: 0,
+            height: "50%",
+          }}
+          key={"Col" + i}
+        >
+          <HeroCard
+            id={"Card" + i}
+            requestSuperhero={props.requestSuperheroData}
+          />
         </Col>
       );
-      superheroes.push(superhero);
+      cards.push(card);
     }
-    return superheroes;
+    return cards;
   };
   return (
-    <Container as={TeamContainer}>
-      <TeamTitle>Title</TeamTitle>
-      <Row as={TeamWrapper} md={3} xs={2}>
-        <SuperHeroes />
-      </Row>
+    <Container fluid as={BaseContainer}>
+      <Container fluid as={TeamContainer}>
+        <Row as={TeamMembersWrapper} md={3} xs={1}>
+          <SuperHeroCards />
+        </Row>
+      </Container>
     </Container>
   );
 };
