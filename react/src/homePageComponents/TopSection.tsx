@@ -33,7 +33,7 @@ const TopContainer: any = styled.div`
   height: 10vh;
   position: relative;
   width: 100%;
-  border-bottom: 1px solid #333;
+  /*border-bottom: 1px solid #333;*/
 `;
 export function TopSection(_props: MenuProps) {
   const context: any = useContext(authenticationContext);

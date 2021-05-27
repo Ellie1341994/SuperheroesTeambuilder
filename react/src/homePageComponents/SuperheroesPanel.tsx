@@ -2,9 +2,12 @@ import React from "react";
 import { SuperheroTeam } from "./SuperHeroTeam";
 import superheroesApiToken from "../superheroApiToken";
 import axios from "axios";
+import { SuperheroCard } from "./SuperheroCard";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import { SuperheroProps } from "./SuperheroProps";
 interface SuperheroesPanelStateProps {
-  superheroesInTheTeam: any;
+  superheroesInTheTeam: SuperheroProps[];
   teamPowerstats: any;
 }
 interface SuperheroesPanelAttributeProps {}
@@ -19,6 +22,7 @@ export class SuperheroesPanel extends React.Component<
     this.addSuperhero = this.addSuperhero.bind(this);
     this.removeSuperhero = this.removeSuperhero.bind(this);
     this.computeTeamPowerstats = this.computeTeamPowerstats.bind(this);
+    this.makeSuperheroCards = this.makeSuperheroCards.bind(this);
     const MAX_SUPERHEROES: number = 6;
     const superheroesInTheTeam: any = JSON.parse(
       localStorage.getItem("userSuperheroesTeam") ??
@@ -28,48 +32,50 @@ export class SuperheroesPanel extends React.Component<
       superheroesInTheTeam,
       teamPowerstats: {},
     };
-    console.log("constructor", this.state);
   }
   componentDidMount() {
+    console.log("Initial tema state", this.state);
     this.computeTeamPowerstats();
   }
   componentDidUpdate(_previousProps: any, _previousState: any) {
-    if (
-      _previousState.superheroesInTheTeam !== this.state.superheroesInTheTeam
-    ) {
-      localStorage.setItem(
-        "userSuperheroesTeam",
-        JSON.stringify(this.state.superheroesInTheTeam)
-      );
-      this.computeTeamPowerstats();
-      console.log(this.state);
-    }
+    localStorage.setItem(
+      "userSuperheroesTeam",
+      JSON.stringify(this.state.superheroesInTheTeam)
+    );
+    this.computeTeamPowerstats();
+    console.log("superhero team locally stored ");
   }
-  addSuperhero(
-    superheroData: SuperheroProps,
-    positionInTheTeam: number | string
-  ) {
+  addSuperhero(superheroData: SuperheroProps, position: number) {
+    console.log("pitt", position);
+    if (position === undefined) {
+      return console.log("card position error");
+    }
     console.log(superheroData);
     this.setState((state: any, _props: any) => {
-      state.superheroesInTheTeam[positionInTheTeam] = superheroData;
+      state.superheroesInTheTeam[position] = superheroData;
       return state;
     });
+    console.log("superhero added");
     console.log(this.state);
   }
-  removeSuperhero(id: number | string) {
+  removeSuperhero(position: number) {
+    if (isNaN(position) || 0 > position || position > 5) {
+      return console.log("hero position error", position);
+    }
     this.setState((state: any, _props: any) => {
-      state.superheroesInTheTeam[id] = undefined;
+      state.superheroesInTheTeam[position] = null;
       return state;
     });
+    console.log("superhero removed");
   }
   computeTeamPowerstats() {} //to do
-  async getSuperheroData(identifier: number | string) {
+  async getSuperheroData(identifier: string, position: number) {
     const RELATIVE_BASE_SUPERHERO_URL: string = "/api/" + superheroesApiToken;
     const SEARCH_SUPERHERO_URL: string =
       RELATIVE_BASE_SUPERHERO_URL + "/search/" + identifier;
     const DIRECT_SUPERHERO_URL: string =
       RELATIVE_BASE_SUPERHERO_URL + "/" + identifier;
-    const identifierIsNumeric: boolean = typeof identifier === "number";
+    const identifierIsNumeric: boolean = /^[0-9]+$/.test(identifier);
     const URL: string = identifierIsNumeric
       ? DIRECT_SUPERHERO_URL
       : SEARCH_SUPERHERO_URL;
@@ -77,7 +83,8 @@ export class SuperheroesPanel extends React.Component<
       const response: any = await axios.get(URL);
       console.log(response);
       const {
-        response: responseStatus,
+        response: responseMessage,
+        error,
         "results-for": resultsFor,
         ...superheroData
       } = response.data;
@@ -85,24 +92,43 @@ export class SuperheroesPanel extends React.Component<
       // the type in the line above is wrong because response is not the property. responseStatus is.
       // TypeScript throws an error if I use responseStatus though, I don't know how to correct it.
       // It doesn't also recognize newSuperhero props
-      const mainSuperheroicPackage: any = {
-        data: superheroData.results ?? superheroData,
-        addSuperhero: this.addSuperhero,
-        removeSuperhero: this.removeSuperhero,
-      };
-      return mainSuperheroicPackage;
+      if (responseMessage !== "error") {
+        this.addSuperhero(superheroData.results ?? superheroData, position);
+      }
+      return error;
     } catch (error) {
       console.log(error);
     }
   }
+  makeSuperheroCards() {
+    const cards: any = [];
+    for (let position: number = 0; position < 6; position++) {
+      const card: any = (
+        <Col
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 0,
+            margin: 0,
+            height: "50%",
+          }}
+          key={"Col" + position}
+        >
+          <SuperheroCard
+            cardId={"Card" + position}
+            superheroData={this.state.superheroesInTheTeam[position]}
+            getSuperheroData={this.getSuperheroData}
+            removeSuperhero={this.removeSuperhero}
+            addSuperhero={this.addSuperhero}
+          />
+        </Col>
+      );
+      cards.push(card);
+    }
+    return cards;
+  }
   render() {
-    console.log(this.state);
-    return (
-      <SuperheroTeam
-        teamMembersData={this.state.superheroesInTheTeam}
-        teamPowerstatsData={this.state.teamPowerstats}
-        requestSuperheroData={this.getSuperheroData}
-      />
-    );
+    return <SuperheroTeam> {this.makeSuperheroCards()} </SuperheroTeam>;
   }
 }

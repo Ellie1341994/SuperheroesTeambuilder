@@ -1,4 +1,4 @@
-import { AppForm } from "./AppForm";
+import { LoginForm } from "./LoginForm";
 import styled from "styled-components";
 import { AppName } from "./AppName";
 const Lobby: any = styled.div`
@@ -12,8 +12,7 @@ const Lobby: any = styled.div`
 export const LoginPage: any = ({ authContext, history }: any) => (
   <Lobby>
     <AppName>Super Heroes Teambuilder</AppName>
-    <AppForm
-      type="login"
+    <LoginForm
       history={history}
       initialValues={{
         authContext,
