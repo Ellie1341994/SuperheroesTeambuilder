@@ -1,6 +1,6 @@
 import { LoginForm } from "./LoginForm";
 import styled from "styled-components";
-import { AppName } from "./AppName";
+import { AppName } from "../AppName";
 const Lobby: any = styled.div`
   display: flex;
   background-color: #333;

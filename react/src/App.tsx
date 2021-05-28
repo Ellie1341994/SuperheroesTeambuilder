@@ -8,8 +8,8 @@ import {
   Redirect,
 } from "react-router-dom";
 import "./App.css";
-import { LoginPage } from "./LoginPage";
-import { HomePage } from "./HomePage";
+import { LoginPage } from "./loginPageComponents/LoginPage";
+import { HomePage } from "./homePageComponents/HomePage";
 export interface AuthContextProps {
   token: string;
   setToken: Function;

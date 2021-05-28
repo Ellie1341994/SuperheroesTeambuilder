@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios, { AxiosResponse } from "axios";
 import styled from "styled-components";
-import { AuthContextProps } from "./App";
+import { AuthContextProps } from "../App";
 export interface LoginFormInitialValues {
   authContext: AuthContextProps;
   url: string;
@@ -82,8 +82,8 @@ export const LoginForm: any = (props: AppFormProps) => {
         <>
           <Form
             id="LoginForm"
-            className="rounded w-50 w-75 shadow pt-3 mx-auto"
-            style={{ backgroundColor: "white" }}
+            className="rounded d-flex flex-column  h-50 w-75 shadow pt-3 mx-auto"
+            style={{ backgroundColor: "white", justifyContent: "space-evenly" }}
             onSubmit={handleSubmit}
           >
             <Form.Group as={Row} className="p-0 m-0">
