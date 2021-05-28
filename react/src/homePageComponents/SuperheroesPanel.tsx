@@ -2,6 +2,7 @@ import React from "react";
 import { SuperheroTeam } from "./SuperHeroTeam";
 import superheroesApiToken from "../superheroApiToken";
 import axios from "axios";
+import { AxiosPromise, AxiosResponse } from "axios";
 import { SuperheroCard } from "./SuperheroCard";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -73,7 +74,7 @@ export class SuperheroesPanel extends React.Component<
       ? DIRECT_SUPERHERO_URL
       : SEARCH_SUPERHERO_URL;
     try {
-      const response: any = await axios.get(URL);
+      const response: AxiosResponse = await axios.get(URL);
       console.log(response);
       let {
         response: responseMessage,
@@ -98,9 +99,9 @@ export class SuperheroesPanel extends React.Component<
     }
   }
   makeSuperheroCards() {
-    const cards: any = [];
+    const cardsBox: any = [];
     for (let position: number = 0; position < 6; position++) {
-      const card: any = (
+      const cardBox: any = (
         <Col
           style={{
             display: "flex",
@@ -112,8 +113,9 @@ export class SuperheroesPanel extends React.Component<
           }}
           key={"Col" + position}
         >
+          {/*Cards must recieve the state directly otherwise all cards get rerendered*/}
           <SuperheroCard
-            cardId={"Card" + position}
+            position={position}
             superheroData={this.state.superheroesInTheTeam[position]}
             getSuperheroData={this.getSuperheroData}
             removeSuperhero={this.removeSuperhero}
@@ -121,9 +123,9 @@ export class SuperheroesPanel extends React.Component<
           />
         </Col>
       );
-      cards.push(card);
+      cardsBox.push(cardBox);
     }
-    return cards;
+    return cardsBox;
   }
   render() {
     return <SuperheroTeam> {this.makeSuperheroCards()} </SuperheroTeam>;

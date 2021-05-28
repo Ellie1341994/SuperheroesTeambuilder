@@ -1,30 +1,11 @@
 import styled from "styled-components";
-import { SuperheroProps } from "./SuperheroProps";
+import { SuperheroProps, isSuperhero } from "./SuperheroProps";
 import { SuperheroForm } from "./SuperheroForm";
 import { Superhero } from "./Superhero";
 import Button from "react-bootstrap/Button";
 import React from "react";
 import { ImCross } from "react-icons/im";
-const CustomGrUserAddIcon: any = (props: any) => (
-  <svg
-    onClick={props.onClick}
-    stroke="#333"
-    fill="currentColor"
-    strokeWidth="0"
-    viewBox="0 0 24 24"
-    height="56px"
-    width="56px"
-    xmlns="http://www.w3.org/2000/svg"
-    color="#333"
-  >
-    <path
-      fill="none"
-      stroke="#555"
-      strokeWidth="2"
-      d="M5,24 L5,19 M11,24 L11,19 M1,24 L1,18 C1,13.0294373 4.13400675,11 8,11 C11.8659932,11 15,13 15,18 L15,24 M8,11 C10.7614237,11 13,8.76142375 13,6 C13,3.23857625 10.7614237,1 8,1 C5.23857625,1 3,3.23857625 3,6 C3,8.76142375 5.23857625,11 8,11 Z M16,11 L24,11 M20,7 L20,15"
-    ></path>
-  </svg>
-);
+import { AddSuperheroIcon } from "./AddSuperheroIcon";
 const SuperheroBox: any = styled.div`
   display: flex;
   overflow: hidden;
@@ -51,15 +32,13 @@ const SuperheroAlignmentBorderBox: any = styled.div`
   box-shadow: 0 5px 3px #666;
   border-radius: 10%;
   background-image: ${(props: any) => {
-    switch (props.As) {
-      case "bad":
-        return "linear-gradient(360deg, #c03, #113)";
-      case "good":
-        return "linear-gradient(90deg, #616, #33c)";
-      default:
-        return "linear-gradient(45deg, #999, #333)";
-    }
-  }};
+    let linearGradientArgs: any = {
+      bad: "360deg, #c03, #113",
+      good: "90deg, #616, #33c",
+      empty: "45deg, #fcc, #335", // "45deg, #999, #333",
+    };
+    return "linear-gradient(" + linearGradientArgs[props.As] + ")";
+  }}};
   @media (max-width: 576px) {
     /* matches "sm" react boostrap width value */
   }
@@ -72,7 +51,6 @@ const QuitFormButton: any = (props: { quitFormHandler: any }) => (
   />
 );
 const DeleteSuperheroDataButton: any = (props: {
-  value: any;
   removeSuperheroHandler: Function;
   superheroPosition: number;
 }) => (
@@ -87,11 +65,11 @@ const DeleteSuperheroDataButton: any = (props: {
   </a>
 );
 interface SuperheroCardProps {
-  cardId: string;
   getSuperheroData: Function;
   superheroData: SuperheroProps | SuperheroProps[];
   removeSuperhero: Function;
   addSuperhero: Function;
+  position: number;
 }
 export const SuperheroCard: any = (props: SuperheroCardProps) => {
   const [showSuperheroForm, setShowSuperheroForm] = React.useState(false);
@@ -108,22 +86,18 @@ export const SuperheroCard: any = (props: SuperheroCardProps) => {
     }
     return undefined;
   };
-  const positionIndex: number = 4;
-  let superheroPosition: number = parseInt(props.cardId[positionIndex]);
-  let superheroChosen: boolean =
-    props.superheroData !== null && !Array.isArray(props.superheroData);
-  let superheroAlignment: string = superheroChosen
-    ? (props.superheroData as SuperheroProps).biography.alignment
-    : "EMPTY";
+  let superheroPosition: number = props.position;
+  //props.superheroData !== null && !Array.isArray(props.superheroData);
+  let superheroAlignment: string = isSuperhero(props.superheroData)
+    ? props.superheroData.biography.alignment
+    : "empty";
   let inputName: string = "identifier" + superheroPosition;
   let formInitialValues: any = { [inputName]: "" };
   return (
     <SuperheroAlignmentBorderBox As={superheroAlignment}>
       <SuperheroBox id={"superheroBox"}>
         {(() => {
-          console.log(superheroPosition);
           let superheroBoxItems: any = undefined;
-          //<React.Fragment key={...}></... doesn't work>
           if (showSuperheroForm) {
             superheroBoxItems = (
               <SuperheroForm
@@ -137,68 +111,70 @@ export const SuperheroCard: any = (props: SuperheroCardProps) => {
             );
           } else if (!props.superheroData) {
             return (
-              <CustomGrUserAddIcon
-                onClick={handleOnClick}
+              <AddSuperheroIcon
+                showForm={handleOnClick}
                 key={"superheroBoxIcon"}
               />
             );
-          } else if (superheroChosen) {
-            superheroBoxItems = (
-              <Superhero
-                children={
-                  <DeleteSuperheroDataButton
-                    key={"DeleteSuperheroDataButton"}
-                    superheroPosition={superheroPosition}
-                    value="Dismiss"
-                    removeSuperheroHandler={props.removeSuperhero}
-                  />
-                }
-                curriculumVitae={props.superheroData}
-              />
-            );
           } else {
-            superheroBoxItems = [];
-            let superheroIndex: number = 0;
-            for (let superhero of props.superheroData as SuperheroProps[]) {
-              superheroIndex++;
-              const superheroFullName: string =
-                superhero.biography["full-name"];
-              superheroBoxItems.push(
-                <option
-                  value={superheroIndex}
-                  key={superheroFullName + superhero.name}
-                >
-                  {superheroFullName
-                    ? superheroFullName + `(${superhero.name})`
-                    : superhero.name}
-                </option>
-              );
-            }
-            superheroBoxItems = (
-              <>
-                <DeleteSuperheroDataButton
-                  key={"DeleteSuperheroDataButton"}
-                  superheroPosition={superheroPosition}
-                  value="Dismiss"
-                  removeSuperheroHandler={props.removeSuperhero}
+            if (isSuperhero(props.superheroData)) {
+              superheroBoxItems = (
+                <Superhero
+                  children={
+                    <DeleteSuperheroDataButton
+                      key={"DeleteSuperheroDataButton"}
+                      superheroPosition={superheroPosition}
+                      removeSuperheroHandler={props.removeSuperhero}
+                    />
+                  }
+                  curriculumVitae={props.superheroData}
                 />
+              );
+            } else {
+              const QuitOptionId: string = "QuitSuperheroSelection";
+              const QuitSelectionOption: any = (
+                <React.Fragment key={QuitOptionId}>
+                  <option>Select or Quit</option>
+                  <option id={QuitOptionId} value={superheroPosition}>
+                    Quit Selection
+                  </option>
+                </React.Fragment>
+              );
+
+              superheroBoxItems = [QuitSelectionOption];
+              let superheroIndex: number = 0;
+              for (let superhero of props.superheroData) {
+                superheroIndex++;
+                const superheroFullName: string =
+                  superhero.biography["full-name"];
+                superheroBoxItems.push(
+                  <option
+                    value={superheroIndex}
+                    key={superheroFullName + superhero.name}
+                  >
+                    {superheroFullName
+                      ? superheroFullName + `(${superhero.name})`
+                      : superhero.name}
+                  </option>
+                );
+              }
+              superheroBoxItems = (
                 <select
                   onChange={(event: any) => {
-                    console.log(event.target);
-                    // publically available data
-                    props.addSuperhero(
-                      (props.superheroData as SuperheroProps[])[
-                        event.target.value as number
-                      ],
-                      superheroPosition
-                    );
+                    const select: HTMLSelectElement = event.target;
+                    const superhero: any = (
+                      props.superheroData as SuperheroProps[]
+                    )[parseInt(select.value)];
+                    select.options[select.selectedIndex].id === QuitOptionId
+                      ? props.removeSuperhero(select.value)
+                      : props.addSuperhero(superhero, superheroPosition);
                   }}
                   key="superheroesList"
                 >
                   {superheroBoxItems}
                 </select>
-              </>
-            );
+              );
+            }
           }
           return superheroBoxItems;
         })()}

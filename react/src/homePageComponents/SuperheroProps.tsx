@@ -54,3 +54,8 @@ export interface SuperheroProps {
     url: string;
   };
 }
+export function isSuperhero(
+  object: SuperheroProps | SuperheroProps[]
+): object is SuperheroProps {
+  return object && (object as SuperheroProps).biography !== undefined;
+}
