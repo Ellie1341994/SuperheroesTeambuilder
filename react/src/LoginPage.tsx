@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { AppName } from "./AppName";
 const Lobby: any = styled.div`
   display: flex;
+  background-color: #333;
   flex-direction: column;
   justify-content: center;
   width: 100%;
@@ -11,7 +12,7 @@ const Lobby: any = styled.div`
 `;
 export const LoginPage: any = ({ authContext, history }: any) => (
   <Lobby>
-    <AppName>Super Heroes Teambuilder</AppName>
+    <AppName children={"Superheroes Teambuilder"} />
     <LoginForm
       history={history}
       initialValues={{

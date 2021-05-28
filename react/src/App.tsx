@@ -8,10 +8,9 @@ import {
   Redirect,
 } from "react-router-dom";
 import "./App.css";
-import { AppBody } from "./AppBody";
 import { LoginPage } from "./LoginPage";
 import { HomePage } from "./HomePage";
-interface AuthContextProps {
+export interface AuthContextProps {
   token: string;
   setToken: Function;
 }
@@ -22,9 +21,7 @@ function App() {
       <Router>
         <HelmetProvider>
           <Helmet title="Superheroes Teambuilder" />
-          <AppBody>
-            <RoutePermissionController />
-          </AppBody>
+          <RoutePermissionController />
         </HelmetProvider>
       </Router>
     </ProvideAuth>
