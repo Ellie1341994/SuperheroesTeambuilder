@@ -34,7 +34,6 @@ export class SuperheroesPanel extends React.Component<
     };
   }
   componentDidMount() {
-    console.log("Initial tema state", this.state);
     this.computeTeamPowerstats();
   }
   componentDidUpdate(_previousProps: any, _previousState: any) {
@@ -43,30 +42,24 @@ export class SuperheroesPanel extends React.Component<
       JSON.stringify(this.state.superheroesInTheTeam)
     );
     this.computeTeamPowerstats();
-    console.log("superhero team locally stored ");
   }
   addSuperhero(superheroData: SuperheroProps, position: number) {
-    console.log("pitt", position);
-    if (position === undefined) {
-      return console.log("card position error");
+    if (!superheroData || isNaN(position) || position < 0 || position > 5) {
+      return "Error adding superhero";
     }
-    console.log(superheroData);
     this.setState((state: any, _props: any) => {
       state.superheroesInTheTeam[position] = superheroData;
       return state;
     });
-    console.log("superhero added");
-    console.log(this.state);
   }
   removeSuperhero(position: number) {
     if (isNaN(position) || 0 > position || position > 5) {
-      return console.log("hero position error", position);
+      return "remove superhero error";
     }
     this.setState((state: any, _props: any) => {
       state.superheroesInTheTeam[position] = null;
       return state;
     });
-    console.log("superhero removed");
   }
   computeTeamPowerstats() {} //to do
   async getSuperheroData(identifier: string, position: number) {
@@ -82,20 +75,24 @@ export class SuperheroesPanel extends React.Component<
     try {
       const response: any = await axios.get(URL);
       console.log(response);
-      const {
+      let {
         response: responseMessage,
-        error,
+        error: responseError,
         "results-for": resultsFor,
         ...superheroData
       } = response.data;
-      // .... :{ response: string; newSuperhero: SuperheroProps } = response.data;
-      // the type in the line above is wrong because response is not the property. responseStatus is.
-      // TypeScript throws an error if I use responseStatus though, I don't know how to correct it.
-      // It doesn't also recognize newSuperhero props
-      if (responseMessage !== "error") {
-        this.addSuperhero(superheroData.results ?? superheroData, position);
+
+      if (!responseError) {
+        // case for multiple results
+        if (resultsFor) {
+          superheroData.results.length > 1
+            ? (superheroData = superheroData.results)
+            : (superheroData = superheroData.results.pop());
+        }
+        responseError = this.addSuperhero(superheroData, position);
       }
-      return error;
+      console.log(responseError);
+      return responseError;
     } catch (error) {
       console.log(error);
     }

@@ -23,7 +23,6 @@ const TeamContainer: any = styled.div`
   padding: 0;
   height: 90%;
   width: 90%;
-  border: 1px solid #333;
   @media (max-width: 576px) {
     /* matches "sm" react boostrap width value */
     height: 100%;

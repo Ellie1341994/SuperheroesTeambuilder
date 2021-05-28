@@ -1,8 +1,10 @@
 import styled from "styled-components";
 import { SuperheroProps } from "./SuperheroProps";
 import { SuperheroForm } from "./SuperheroForm";
+import { Superhero } from "./Superhero";
 import Button from "react-bootstrap/Button";
 import React from "react";
+import { ImCross } from "react-icons/im";
 const CustomGrUserAddIcon: any = (props: any) => (
   <svg
     onClick={props.onClick}
@@ -10,8 +12,8 @@ const CustomGrUserAddIcon: any = (props: any) => (
     fill="currentColor"
     strokeWidth="0"
     viewBox="0 0 24 24"
-    height="56"
-    width="56"
+    height="56px"
+    width="56px"
     xmlns="http://www.w3.org/2000/svg"
     color="#333"
   >
@@ -25,14 +27,15 @@ const CustomGrUserAddIcon: any = (props: any) => (
 );
 const SuperheroBox: any = styled.div`
   display: flex;
+  overflow: hidden;
   justify-content: center;
   align-items: center;
   margin: 0;
   height: 95%;
   width: 95%;
   border-radius: 10%;
-  box-shadow: inset 0 -3px 3px #333;
   background-color: white;
+  position: relative;
   z-index: 1;
   @media (max-width: 576px) {
     /* matches "sm" react boostrap width value */
@@ -69,19 +72,19 @@ const QuitFormButton: any = (props: { quitFormHandler: any }) => (
   />
 );
 const DeleteSuperheroDataButton: any = (props: {
+  value: any;
   removeSuperheroHandler: Function;
   superheroPosition: number;
 }) => (
-  <Button
+  <a
+    href="/"
     onClick={(event: any) => {
       event.preventDefault();
       props.removeSuperheroHandler(props.superheroPosition);
     }}
-    value={"Delete superhero"}
-    type="submit"
-    variant="link"
-    as="input"
-  />
+  >
+    <ImCross color="red" />
+  </a>
 );
 interface SuperheroCardProps {
   cardId: string;
@@ -141,29 +144,29 @@ export const SuperheroCard: any = (props: SuperheroCardProps) => {
             );
           } else if (superheroChosen) {
             superheroBoxItems = (
-              <>
-                {(props.superheroData as SuperheroProps).name}
-                <DeleteSuperheroDataButton
-                  key={"DeleteSuperheroDataButton"}
-                  superheroPosition={superheroPosition}
-                  removeSuperheroHandler={props.removeSuperhero}
-                />
-              </>
+              <Superhero
+                children={
+                  <DeleteSuperheroDataButton
+                    key={"DeleteSuperheroDataButton"}
+                    superheroPosition={superheroPosition}
+                    value="Dismiss"
+                    removeSuperheroHandler={props.removeSuperhero}
+                  />
+                }
+                curriculumVitae={props.superheroData}
+              />
             );
-            /*<Superhero/>*/
           } else {
-            /*<SuperheroesOptions*/
             superheroBoxItems = [];
+            let superheroIndex: number = 0;
             for (let superhero of props.superheroData as SuperheroProps[]) {
+              superheroIndex++;
               const superheroFullName: string =
                 superhero.biography["full-name"];
               superheroBoxItems.push(
                 <option
+                  value={superheroIndex}
                   key={superheroFullName + superhero.name}
-                  onClick={() => {
-                    props.addSuperhero(superhero, superheroPosition);
-                  }}
-                  value={JSON.stringify(superhero)}
                 >
                   {superheroFullName
                     ? superheroFullName + `(${superhero.name})`
@@ -172,18 +175,29 @@ export const SuperheroCard: any = (props: SuperheroCardProps) => {
               );
             }
             superheroBoxItems = (
-              <select
-                onSelect={(event: any) => {
-                  // publically available data
-                  props.addSuperhero(
-                    JSON.parse(event.target.value),
-                    superheroPosition
-                  );
-                }}
-                key="superheroesList"
-              >
-                {superheroBoxItems}
-              </select>
+              <>
+                <DeleteSuperheroDataButton
+                  key={"DeleteSuperheroDataButton"}
+                  superheroPosition={superheroPosition}
+                  value="Dismiss"
+                  removeSuperheroHandler={props.removeSuperhero}
+                />
+                <select
+                  onChange={(event: any) => {
+                    console.log(event.target);
+                    // publically available data
+                    props.addSuperhero(
+                      (props.superheroData as SuperheroProps[])[
+                        event.target.value as number
+                      ],
+                      superheroPosition
+                    );
+                  }}
+                  key="superheroesList"
+                >
+                  {superheroBoxItems}
+                </select>
+              </>
             );
           }
           return superheroBoxItems;
