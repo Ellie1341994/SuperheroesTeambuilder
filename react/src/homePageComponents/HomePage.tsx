@@ -1,10 +1,10 @@
 import { TopSection } from "./TopSection";
-import { SuperheroesPanel } from "./SuperheroesPanel";
+import { SuperheroDataManager } from "./SuperheroDataManager";
 export const HomePage = () => {
   return (
     <>
       <TopSection />
-      <SuperheroesPanel />
+      <SuperheroDataManager />
     </>
   );
 };

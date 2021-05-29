@@ -1,10 +1,10 @@
-export interface SuperHeroPowerstatsProps {
-  intelligence: string;
-  strength: string;
-  speed: string;
-  durability: string;
-  power: string;
-  combat: string;
+export interface SuperHeroPowerstatsProps<T = string> {
+  intelligence: T;
+  strength: T;
+  speed: T;
+  durability: T;
+  power: T;
+  combat: T;
 }
 export interface SuperHeroBiographyProps {
   "full-name": string;
@@ -16,13 +16,13 @@ export interface SuperHeroBiographyProps {
   alignment: string;
 }
 
-export interface SuperHeroAppearenceProps {
-  gender: string;
-  race: string;
-  weight: string[];
-  height: string[];
-  "eye-color": string;
-  "hair-color": string;
+export interface SuperHeroAppearenceProps<T = string> {
+  gender: T;
+  race: T;
+  weight: T[];
+  height: T[];
+  "eye-color": T;
+  "hair-color": T;
 }
 export interface SuperHeroWorkProps {
   occupation: string;
