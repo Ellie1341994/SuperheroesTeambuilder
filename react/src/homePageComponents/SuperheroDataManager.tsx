@@ -3,7 +3,7 @@ import { SuperheroTeam } from "./SuperHeroTeam";
 import { SuperheroCard } from "./SuperheroCard";
 import Col from "react-bootstrap/Col";
 import { SuperheroProps, isSuperhero } from "./SuperheroProps";
-import { TeamCharacteristics } from "./TeamCharacteristics";
+import { TeamInformation } from "./TeamInformation";
 interface SuperheroDataManagerStateProps {
   superheroesInTheTeam: SuperheroProps[] | SuperheroProps[][];
 }
@@ -15,9 +15,9 @@ export class SuperheroDataManager extends React.Component<
   // SUPERHEROES_API_URL: string = " https://superheroapi.com/api/" + superheroesApiToken;
   constructor(_props: any) {
     super(_props);
-    this.addSuperhero = this.addSuperhero.bind(this);
-    this.removeSuperhero = this.removeSuperhero.bind(this);
-    this.makeSuperheroCards = this.makeSuperheroCards.bind(this);
+    this.AddCharacterHandler = this.AddCharacterHandler.bind(this);
+    this.removeCharacterHandler = this.removeCharacterHandler.bind(this);
+    this.makeCharacterCards = this.makeCharacterCards.bind(this);
     this.validateCharacterRequirements =
       this.validateCharacterRequirements.bind(this);
     const MAX_SUPERHEROES: number = 6;
@@ -67,7 +67,7 @@ export class SuperheroDataManager extends React.Component<
         : "Team alignment is unbalanced";
     }
   }
-  addSuperhero(
+  AddCharacterHandler(
     superheroData: SuperheroProps | SuperheroProps[],
     position: number
   ) {
@@ -90,7 +90,7 @@ export class SuperheroDataManager extends React.Component<
       }
     );
   }
-  removeSuperhero(position: number) {
+  removeCharacterHandler(position: number) {
     if (isNaN(position) || 0 > position || position > 5) {
       return "remove superhero error";
     }
@@ -99,7 +99,7 @@ export class SuperheroDataManager extends React.Component<
       return state;
     });
   }
-  makeSuperheroCards() {
+  makeCharacterCards() {
     const cardsBox: any[] = [];
     for (let position: number = 0; position < 6; position++) {
       const cardBox: any = (
@@ -118,8 +118,8 @@ export class SuperheroDataManager extends React.Component<
           <SuperheroCard
             position={position}
             superheroData={this.state.superheroesInTheTeam[position]}
-            removeSuperhero={this.removeSuperhero}
-            addCharacterData={this.addSuperhero}
+            removeSuperhero={this.removeCharacterHandler}
+            addCharacterData={this.AddCharacterHandler}
           />
         </Col>
       );
@@ -130,10 +130,8 @@ export class SuperheroDataManager extends React.Component<
   render() {
     return (
       <>
-        <SuperheroTeam> {this.makeSuperheroCards()} </SuperheroTeam>;
-        <TeamCharacteristics
-          superheroesData={this.state.superheroesInTheTeam}
-        />
+        <TeamInformation superheroesData={this.state.superheroesInTheTeam} />
+        <SuperheroTeam> {this.makeCharacterCards()} </SuperheroTeam>
       </>
     );
   }

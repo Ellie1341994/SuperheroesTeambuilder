@@ -21,20 +21,17 @@ const TeamContainer: any = styled.div`
   align-items: center;
   margin: 0;
   padding: 0;
-  height: 90%;
-  width: 90%;
   @media (max-width: 576px) {
     /* matches "sm" react boostrap width value */
-    height: 100%;
   }
 `;
 const BaseContainer: any = styled.div`
   display: flex;
+  background-color: #333;
   justify-content: center;
   align-items: center;
   margin: 0;
   padding: 0;
-  height: 90vh;
 `;
 
 /**
@@ -44,7 +41,7 @@ export const SuperheroTeam: any = (props: any) => {
   return (
     <Container fluid as={BaseContainer}>
       <Container fluid as={TeamContainer}>
-        <Row as={TeamMembersWrapper} md={3} xs={1}>
+        <Row as={TeamMembersWrapper} sm={2} xs={1}>
           {props.children}
         </Row>
       </Container>

@@ -12,11 +12,9 @@ const SuperheroBox: any = styled.div`
   justify-content: center;
   align-items: center;
   margin: 0;
-  height: 95%;
-  width: 95%;
-  border-radius: 10%;
+  height: calc(100% - 15px);
+  width: calc(100% - 15px);
   background-color: white;
-  position: relative;
   z-index: 1;
   @media (max-width: 576px) {
     /* matches "sm" react boostrap width value */
@@ -26,21 +24,23 @@ const SuperheroAlignmentBorderBox: any = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 95%;
-  width: 95%;
-  box-sizing: border-box;
-  box-shadow: 0 5px 3px #666;
-  border-radius: 10%;
+  margin: 0;
+  height: 30vw;
+  width: 40vw;
+  margin: 1vw;
+  box-shadow: -5px 5px 5px #000;
   background-image: ${(props: any) => {
     let linearGradientArgs: any = {
       bad: "360deg, #c03, #113",
       good: "90deg, #616, #33c",
-      neutral: "45deg, #fcc, #335", // "45deg, #999, #333",
+      neutral: "45deg, #999, #999",
     };
     return "linear-gradient(" + linearGradientArgs[props.As] + ")";
   }}};
   @media (max-width: 576px) {
     /* matches "sm" react boostrap width value */
+  height: 70vw;
+  width: 90vw;
   }
 `;
 const QuitFormButton: any = (props: { quitFormHandler: any }) => (
@@ -54,15 +54,15 @@ const DeleteSuperheroDataButton: any = (props: {
   removeSuperheroHandler: Function;
   superheroPosition: number;
 }) => (
-  <a
-    href="/"
-    onClick={(event: any) => {
-      event.preventDefault();
+  <Button
+    variant="link"
+    onClick={() => {
       props.removeSuperheroHandler(props.superheroPosition);
     }}
+    className="text-center p-0 m-0"
   >
-    <ImCross color="red" />
-  </a>
+    <ImCross size={26} color="#333" />
+  </Button>
 );
 interface SuperheroCardProps {
   addCharacterData: Function;

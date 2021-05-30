@@ -3,6 +3,7 @@ export const AppName: any = styled.h1`
   font-family: serif;
   text-align: center;
   padding: 1%;
+  background-color: #333;
   background-image: linear-gradient(90deg, #f00, #3333ff);
   background-clip: text;
   -webkit-background-clip: text;

@@ -82,13 +82,13 @@ export const LoginForm: any = (props: AppFormProps) => {
         <>
           <Form
             id="LoginForm"
-            className="rounded d-flex flex-column  h-50 w-75 shadow pt-3 mx-auto"
+            className="rounded d-flex flex-column  h-50 w-75 pr-2 pl-2 shadow pt-3 mx-auto"
             style={{ backgroundColor: "white", justifyContent: "space-evenly" }}
             onSubmit={handleSubmit}
           >
             <Form.Group as={Row} className="p-0 m-0">
               <Form.Label
-                className="fw-bolder"
+                style={{ fontWeight: 600 }}
                 column
                 xs={4}
                 md={2}
@@ -114,7 +114,7 @@ export const LoginForm: any = (props: AppFormProps) => {
 
             <Form.Group as={Row} className="p-0 m-0">
               <Form.Label
-                className="fw-bolder"
+                style={{ fontWeight: 600 }}
                 children={"Password"}
                 column
                 xs={4}

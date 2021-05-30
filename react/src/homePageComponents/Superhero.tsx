@@ -1,13 +1,71 @@
-import { SuperheroProps, SuperHeroPowerstatsProps } from "./SuperheroProps";
+import { SuperheroProps } from "./SuperheroProps";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Image from "react-bootstrap/Image";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
+import Image from "react-bootstrap/Image";
 import { MdLibraryBooks } from "react-icons/md";
 import { GiOpenBook } from "react-icons/gi";
 import React from "react";
+import styled from "styled-components";
+import { PowerstatsList } from "./PowerstatsList";
+const CharacterActionButtonsRow: any = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  padding: 0 3%;
+`;
+const ShowCharacterDetailsButton: any = (props: any) => {
+  return (
+    <Button
+      className={props.className}
+      onClick={() => props.onClickHandler(!props.show)}
+      variant="link"
+    >
+      {props.show ? (
+        <GiOpenBook size="32" color="#333" />
+      ) : (
+        <MdLibraryBooks size="32" color="#333" />
+      )}
+    </Button>
+  );
+};
+const SuperheroDetails: any = ({ data }: any) => {
+  const detailsBox: any = [];
+  const appearance: any = data.appearance;
+  const aliases = data.biography.aliases;
+  let getRandomIndex: Function = (max: number) =>
+    Math.floor(Math.random() * max);
+  let randomAliasIndex: number = getRandomIndex(aliases.length);
+  const details: any = {
+    height: appearance.height,
+    weight: appearance.weight,
+    "hair color": appearance["hair-color"],
+    "eye color": appearance["eye-colo"],
+    workplace: data.work.base,
+    alias: aliases[randomAliasIndex],
+  };
+  for (let [key, value] of Object.entries(details)) {
+    if (Array.isArray(value)) {
+      value = value.join(" or ");
+    }
+    detailsBox.push(
+      <ListGroup.Item
+        className="d-flex justify-content-between text-capitalize p-1"
+        key={key + value}
+      >
+        <strong style={{ textOverflow: "elipsis" }} children={key + ":"} />
+        {value || "..."}
+      </ListGroup.Item>
+    );
+  }
+  return (
+    <Container
+      className="h-100 overflow-scroll p-0 m-0"
+      fluid
+      children={<ListGroup variant="flush">{detailsBox}</ListGroup>}
+    />
+  );
+};
+
 export const Superhero: any = (props: {
   children: any;
   curriculumVitae: SuperheroProps;
@@ -15,91 +73,47 @@ export const Superhero: any = (props: {
   const data: SuperheroProps = props.curriculumVitae;
   let [displaySuperheroInformation, setDisplaySuperheroInformation] =
     React.useState(false);
-  const SuperheroInformation: any = () => {
-    const detailsBox: any = [];
-    const appearance: any = data.appearance;
-    const aliases = data.biography.aliases;
-    let getRandomIndex: Function = (max: number) =>
-      Math.floor(Math.random() * max);
-    let randomAliasIndex: number = getRandomIndex(aliases.length);
-    const details: any = {
-      Height: appearance.height,
-      Weight: appearance.weight,
-      "Hair color": appearance["hair-color"],
-      "Eye color": appearance["eye-colo"],
-      Workplace: data.work.base,
-      Alias: aliases[randomAliasIndex],
-    };
-    console.log(details);
-    let randomValueIndex: number = getRandomIndex(2);
-    for (let [key, value] of Object.entries(details)) {
-      if (Array.isArray(value)) {
-        value = value[randomValueIndex];
-      }
-      detailsBox.push(
-        <ListGroup.Item className="p-1" key={key + value}>
-          {key + " " + (value || "...")}
-        </ListGroup.Item>
-      );
-    }
-    return <ListGroup variant="flush">{detailsBox}</ListGroup>;
-  };
-  const Powerstats: any = () => {
-    const powerstats: any = [];
-    console.log(data.powerstats);
-    for (let key in data.powerstats) {
-      let value: string | undefined =
-        data.powerstats[key as keyof SuperHeroPowerstatsProps];
-      if (value === "null") {
-        value = undefined;
-      }
-      powerstats.push(
-        <ListGroup.Item className="p-0" key={key + data.name}>
-          {key + " " + (value || "...")}
-        </ListGroup.Item>
-      );
-    }
-    return (
-      <ListGroup className="" variant="flush">
-        {powerstats}
-      </ListGroup>
-    );
-  };
   return (
     <>
-      <Container className="position-relative h-100 p-0 m-0 w-100">
-        <Row className="h-10 w-100 text-center" xs={1} sm={1} md={1}>
-          <h3 className="p-0 m-0">{data.name}</h3>
-        </Row>
-        <Row className="h-90 w-100" xs={2} sm={2} md={2}>
-          <Image alt="" className="" src={data.image.url} />
-          <Col className="p-0 m-0 h-100 w-50">
+      <Container className="d-flex flex-column m-0  h-100 w-100">
+        <Container className="d-flex justify-content-center p-0 m-0 h-10">
+          <h3 style={{ fontFamily: "serif" }} className=" p-0 m-0">
+            {data.name}
+          </h3>
+        </Container>
+        <Container style={{ height: "88%" }} className="d-flex  p-0 m-0  w-100">
+          <Image
+            style={{
+              margin: "5%",
+              borderRadius: "10%",
+              boxShadow: "0 0 5px #333",
+            }}
+            fluid
+            src={data.image.url}
+          />
+          <Container
+            className="d-flex flex-column p-0 m-0  w-50"
+            style={{ justifyContent: "space-evenly" }}
+          >
             {displaySuperheroInformation ? (
-              <>
-                <SuperheroInformation />
-              </>
+              <SuperheroDetails data={data} />
             ) : (
-              <>
-                <Powerstats />
-              </>
+              <PowerstatsList data={data} />
             )}
-            <Row className="">
-              {props.children}
-              <Button
-                onClick={() =>
-                  setDisplaySuperheroInformation(!displaySuperheroInformation)
-                }
-                variant="link"
-              >
-                {displaySuperheroInformation ? (
-                  <GiOpenBook size="32" color="red" />
-                ) : (
-                  <MdLibraryBooks size="32" color="red" />
-                )}
-              </Button>
-            </Row>
-          </Col>
-        </Row>
+            <CharacterActionButtonsRow
+              children={
+                <>
+                  {props.children}
+                  <ShowCharacterDetailsButton
+                    className="p-0 m-0 text-center"
+                    onClickHandler={setDisplaySuperheroInformation}
+                    show={displaySuperheroInformation}
+                  />
+                </>
+              }
+            />
+          </Container>
+        </Container>
       </Container>
     </>
   );

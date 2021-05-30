@@ -32,6 +32,7 @@ const TopContainer: any = styled.div`
   justify-content: center;
   height: 10vh;
   position: relative;
+  background-color: #333;
   width: 100%;
 `;
 export function TopSection(_props: MenuProps) {
