@@ -1,8 +1,5 @@
 import React from "react";
 import { SuperheroTeam } from "./SuperHeroTeam";
-import superheroesApiToken from "../superheroApiToken";
-import axios from "axios";
-import { AxiosResponse } from "axios";
 import { SuperheroCard } from "./SuperheroCard";
 import Col from "react-bootstrap/Col";
 import { SuperheroProps, isSuperhero } from "./SuperheroProps";
@@ -18,7 +15,6 @@ export class SuperheroDataManager extends React.Component<
   // SUPERHEROES_API_URL: string = " https://superheroapi.com/api/" + superheroesApiToken;
   constructor(_props: any) {
     super(_props);
-    this.getSuperheroData = this.getSuperheroData.bind(this);
     this.addSuperhero = this.addSuperhero.bind(this);
     this.removeSuperhero = this.removeSuperhero.bind(this);
     this.makeSuperheroCards = this.makeSuperheroCards.bind(this);
@@ -103,43 +99,6 @@ export class SuperheroDataManager extends React.Component<
       return state;
     });
   }
-  async getSuperheroData(identifier: string, position: number) {
-    const RELATIVE_BASE_SUPERHERO_URL: string = "/api/" + superheroesApiToken;
-    const SEARCH_SUPERHERO_URL: string =
-      RELATIVE_BASE_SUPERHERO_URL + "/search/" + identifier;
-    const DIRECT_SUPERHERO_URL: string =
-      RELATIVE_BASE_SUPERHERO_URL + "/" + identifier;
-    const identifierIsNumeric: boolean = /^[0-9]+$/.test(identifier);
-    const URL: string = identifierIsNumeric
-      ? DIRECT_SUPERHERO_URL
-      : SEARCH_SUPERHERO_URL;
-    try {
-      const response: AxiosResponse = await axios.get(URL);
-      let {
-        response: responseMessage,
-        error: responseError,
-        "results-for": resultsFor,
-        ...superheroData
-      } = response.data;
-
-      if (!responseError) {
-        // case for multiple results
-        if (resultsFor) {
-          const listOfSuperheroesOrVillians: SuperheroProps[] =
-            superheroData.results.filter((superhero: SuperheroProps) =>
-              /bad|good/.test(superhero.biography.alignment)
-            );
-          listOfSuperheroesOrVillians.length > 1
-            ? (superheroData = listOfSuperheroesOrVillians)
-            : (superheroData = listOfSuperheroesOrVillians.pop());
-        }
-        responseError = this.addSuperhero(superheroData, position);
-      }
-      return responseError;
-    } catch (error) {
-      console.log(error);
-    }
-  }
   makeSuperheroCards() {
     const cardsBox: any[] = [];
     for (let position: number = 0; position < 6; position++) {
@@ -159,9 +118,8 @@ export class SuperheroDataManager extends React.Component<
           <SuperheroCard
             position={position}
             superheroData={this.state.superheroesInTheTeam[position]}
-            getSuperheroData={this.getSuperheroData}
             removeSuperhero={this.removeSuperhero}
-            addSuperhero={this.addSuperhero}
+            addCharacterData={this.addSuperhero}
           />
         </Col>
       );

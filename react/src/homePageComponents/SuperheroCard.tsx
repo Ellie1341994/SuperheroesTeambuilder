@@ -65,10 +65,9 @@ const DeleteSuperheroDataButton: any = (props: {
   </a>
 );
 interface SuperheroCardProps {
-  getSuperheroData: Function;
+  addCharacterData: Function;
   superheroData: SuperheroProps | SuperheroProps[];
   removeSuperhero: Function;
-  addSuperhero: Function;
   position: number;
 }
 export const SuperheroCard: any = (props: SuperheroCardProps) => {
@@ -102,7 +101,8 @@ export const SuperheroCard: any = (props: SuperheroCardProps) => {
               <SuperheroForm
                 initialValues={formInitialValues}
                 superheroPosition={superheroPosition}
-                getSuperheroData={props.getSuperheroData}
+                //getSuperheroData={props.getSuperheroData}
+                addCharacterData={props.addCharacterData}
                 inputName={inputName}
               >
                 <QuitFormButton quitFormHandler={handleOnClick} />
@@ -169,7 +169,7 @@ export const SuperheroCard: any = (props: SuperheroCardProps) => {
                     )[parseInt(select.value)];
                     select.options[select.selectedIndex].id === QuitOptionId
                       ? props.removeSuperhero(select.value)
-                      : props.addSuperhero(superhero, superheroPosition);
+                      : props.addCharacterData(superhero, superheroPosition);
                   }}
                   key="superheroesList"
                 >
