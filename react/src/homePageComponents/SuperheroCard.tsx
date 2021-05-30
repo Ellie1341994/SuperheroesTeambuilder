@@ -35,7 +35,7 @@ const SuperheroAlignmentBorderBox: any = styled.div`
     let linearGradientArgs: any = {
       bad: "360deg, #c03, #113",
       good: "90deg, #616, #33c",
-      empty: "45deg, #fcc, #335", // "45deg, #999, #333",
+      neutral: "45deg, #fcc, #335", // "45deg, #999, #333",
     };
     return "linear-gradient(" + linearGradientArgs[props.As] + ")";
   }}};
@@ -87,10 +87,9 @@ export const SuperheroCard: any = (props: SuperheroCardProps) => {
     return undefined;
   };
   let superheroPosition: number = props.position;
-  //props.superheroData !== null && !Array.isArray(props.superheroData);
   let superheroAlignment: string = isSuperhero(props.superheroData)
     ? props.superheroData.biography.alignment
-    : "empty";
+    : "neutral";
   let inputName: string = "identifier" + superheroPosition;
   let formInitialValues: any = { [inputName]: "" };
   return (
@@ -110,6 +109,7 @@ export const SuperheroCard: any = (props: SuperheroCardProps) => {
               </SuperheroForm>
             );
           } else if (!props.superheroData) {
+            // INITIAL STATE
             return (
               <AddSuperheroIcon
                 showForm={handleOnClick}
@@ -117,6 +117,7 @@ export const SuperheroCard: any = (props: SuperheroCardProps) => {
               />
             );
           } else {
+            // CURRENT CHARACTER
             if (isSuperhero(props.superheroData)) {
               superheroBoxItems = (
                 <Superhero
@@ -131,6 +132,7 @@ export const SuperheroCard: any = (props: SuperheroCardProps) => {
                 />
               );
             } else {
+              // CHARACTER SELECTION
               const QuitOptionId: string = "QuitSuperheroSelection";
               const QuitSelectionOption: any = (
                 <React.Fragment key={QuitOptionId}>

@@ -38,9 +38,6 @@ const BaseContainer: any = styled.div`
 `;
 
 /**
- * Takes a function that requests superheroes
- *
- * Note: this is a doc sketch
  * @summary You can have superhero clones in the team
  */
 export const SuperheroTeam: any = (props: any) => {

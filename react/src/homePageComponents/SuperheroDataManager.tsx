@@ -5,23 +5,25 @@ import axios from "axios";
 import { AxiosResponse } from "axios";
 import { SuperheroCard } from "./SuperheroCard";
 import Col from "react-bootstrap/Col";
-import { SuperheroProps } from "./SuperheroProps";
+import { SuperheroProps, isSuperhero } from "./SuperheroProps";
 import { TeamCharacteristics } from "./TeamCharacteristics";
 interface SuperheroDataManagerStateProps {
-  superheroesInTheTeam: SuperheroProps[];
+  superheroesInTheTeam: SuperheroProps[] | SuperheroProps[][];
 }
 interface SuperheroDataManagerAttributeProps {}
 export class SuperheroDataManager extends React.Component<
   SuperheroDataManagerAttributeProps,
   SuperheroDataManagerStateProps
 > {
-  // SUPERHEROES_API_BASE_URL: string = " https://superheroapi.com/api/" + superheroesApiToken;
+  // SUPERHEROES_API_URL: string = " https://superheroapi.com/api/" + superheroesApiToken;
   constructor(_props: any) {
     super(_props);
     this.getSuperheroData = this.getSuperheroData.bind(this);
     this.addSuperhero = this.addSuperhero.bind(this);
     this.removeSuperhero = this.removeSuperhero.bind(this);
     this.makeSuperheroCards = this.makeSuperheroCards.bind(this);
+    this.validateCharacterRequirements =
+      this.validateCharacterRequirements.bind(this);
     const MAX_SUPERHEROES: number = 6;
     const superheroesInTheTeam: any = JSON.parse(
       localStorage.getItem("userSuperheroesTeam") ??
@@ -37,9 +39,50 @@ export class SuperheroDataManager extends React.Component<
       JSON.stringify(this.state.superheroesInTheTeam)
     );
   }
-  addSuperhero(superheroData: SuperheroProps, position: number) {
+  /**
+   * Character must not be neutral
+   * Character must not already be a team member
+   * Half the team must be bad and the other half good
+   */
+  validateCharacterRequirements(
+    characterData: SuperheroProps
+  ): string | undefined {
+    let alignment: string = characterData.biography.alignment;
+    let isCharacterBad: boolean = /bad/i.test(alignment);
+    let goodCharacterCounter: number = !isCharacterBad ? 1 : 0;
+    let badCharacterCounter: number = isCharacterBad ? -1 : 0;
+    for (let character of this.state.superheroesInTheTeam) {
+      if (!isSuperhero(character)) {
+        continue;
+      }
+      if (characterData.id === character.id) {
+        return "Character already in the team";
+      }
+      let alignment: string = character.biography.alignment;
+      if (/bad/i.test(alignment)) {
+        badCharacterCounter -= 1;
+      } else {
+        goodCharacterCounter += 1;
+      }
+    }
+    if (badCharacterCounter < -3 || goodCharacterCounter > 3) {
+      return /neutral/i.test(alignment)
+        ? "Can't add neutral heroes"
+        : "Team alignment is unbalanced";
+    }
+  }
+  addSuperhero(
+    superheroData: SuperheroProps | SuperheroProps[],
+    position: number
+  ) {
     if (!superheroData || isNaN(position) || position < 0 || position > 5) {
-      return "Error adding superhero";
+      return "Error adding character";
+    }
+    const error: string | undefined = isSuperhero(superheroData)
+      ? this.validateCharacterRequirements(superheroData)
+      : undefined;
+    if (error) {
+      return error;
     }
     this.setState(
       (
@@ -72,7 +115,6 @@ export class SuperheroDataManager extends React.Component<
       : SEARCH_SUPERHERO_URL;
     try {
       const response: AxiosResponse = await axios.get(URL);
-      console.log(response);
       let {
         response: responseMessage,
         error: responseError,
@@ -83,13 +125,16 @@ export class SuperheroDataManager extends React.Component<
       if (!responseError) {
         // case for multiple results
         if (resultsFor) {
-          superheroData.results.length > 1
-            ? (superheroData = superheroData.results)
-            : (superheroData = superheroData.results.pop());
+          const listOfSuperheroesOrVillians: SuperheroProps[] =
+            superheroData.results.filter((superhero: SuperheroProps) =>
+              /bad|good/.test(superhero.biography.alignment)
+            );
+          listOfSuperheroesOrVillians.length > 1
+            ? (superheroData = listOfSuperheroesOrVillians)
+            : (superheroData = listOfSuperheroesOrVillians.pop());
         }
         responseError = this.addSuperhero(superheroData, position);
       }
-      console.log(responseError);
       return responseError;
     } catch (error) {
       console.log(error);

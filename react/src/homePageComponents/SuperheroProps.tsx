@@ -19,8 +19,8 @@ export interface SuperHeroBiographyProps {
 export interface SuperHeroAppearenceProps<T = string> {
   gender: T;
   race: T;
-  weight: T[];
-  height: T[];
+  weight: [T, T];
+  height: [T, T];
   "eye-color": T;
   "hair-color": T;
 }
