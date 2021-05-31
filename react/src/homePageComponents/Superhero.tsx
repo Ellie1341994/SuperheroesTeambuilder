@@ -18,12 +18,12 @@ const ShowCharacterDetailsButton: any = (props: any) => {
     <Button
       className={props.className}
       onClick={() => props.onClickHandler(!props.show)}
-      variant="link"
+      variant="info"
     >
       {props.show ? (
-        <GiOpenBook size="32" color="#333" />
+        <GiOpenBook size="32" color="#fff" />
       ) : (
-        <MdLibraryBooks size="32" color="#333" />
+        <MdLibraryBooks size="32" color="#fff" />
       )}
     </Button>
   );
@@ -49,10 +49,10 @@ const SuperheroDetails: any = ({ data }: any) => {
     }
     detailsBox.push(
       <ListGroup.Item
-        className="d-flex justify-content-between text-capitalize p-1"
+        className="d-flex flex-wrap justify-content-between text-capitalize p-1"
         key={key + value}
       >
-        <strong style={{ textOverflow: "elipsis" }} children={key + ":"} />
+        <strong children={key + ":"} />
         {value || "..."}
       </ListGroup.Item>
     );
@@ -95,17 +95,23 @@ export const Superhero: any = (props: {
             className="d-flex flex-column p-0 m-0  w-50"
             style={{ justifyContent: "space-evenly" }}
           >
-            {displaySuperheroInformation ? (
-              <SuperheroDetails data={data} />
-            ) : (
-              <PowerstatsList data={data} />
-            )}
+            <Container
+              style={{ overflowY: "scroll" }}
+              className="h-80 flex-wrap"
+              fluid
+            >
+              {displaySuperheroInformation ? (
+                <SuperheroDetails data={data} />
+              ) : (
+                <PowerstatsList data={data} />
+              )}
+            </Container>
             <CharacterActionButtonsRow
               children={
                 <>
                   {props.children}
                   <ShowCharacterDetailsButton
-                    className="p-0 m-0 text-center"
+                    className="p-1 m-0 text-center"
                     onClickHandler={setDisplaySuperheroInformation}
                     show={displaySuperheroInformation}
                   />

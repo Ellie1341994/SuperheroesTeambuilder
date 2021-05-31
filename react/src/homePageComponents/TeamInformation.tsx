@@ -8,6 +8,8 @@ import {
 import TeamTitle from "./TeamTitle";
 import { PowerstatsList } from "./PowerstatsList";
 import LogoutButton from "./LogoutButton";
+import Button from "react-bootstrap/Button";
+import { GiBurningSkull } from "react-icons/gi";
 /**
  *@param
  *@returns either a string as a metric unit or undefined if argument is not one
@@ -34,8 +36,10 @@ interface TeamPowerstats extends SuperHeroPowerstatsProps<number> {
 }
 export const TeamInformation: any = ({
   superheroesData,
+  removeTeamHandler,
 }: {
   superheroesData: SuperheroProps[];
+  removeTeamHandler: Function;
 }) => {
   const teamPowerstats: TeamPowerstats = {
     intelligence: 0,
@@ -58,7 +62,6 @@ export const TeamInformation: any = ({
     let totalHeight: number = 0;
     for (let superhero of superheroesData) {
       if (isSuperhero(superhero)) {
-        console.log("works");
         for (let [characteristicName, characteristicValue] of Object.entries(
           superhero.powerstats
         )) {
@@ -70,7 +73,6 @@ export const TeamInformation: any = ({
             characteristicName as keyof SuperHeroPowerstatsProps
           ] += stat;
           // calculates average weight and height
-          console.log(getMetricUnit(superhero.appearance.weight));
           totalWeight += getMetricUnit(superhero.appearance.weight);
           totalHeight += getMetricUnit(superhero.appearance.height);
         }
@@ -88,9 +90,7 @@ export const TeamInformation: any = ({
           totalWeight / BUG_QUICKFIX_VALUE / dataLength
         );
       }
-      console.log(teamPowerstats);
     }
-    console.log("dataLengh", dataLength);
   }
   return (
     <Container className="pb-3" style={{ backgroundColor: "#333" }} fluid>
@@ -107,11 +107,22 @@ export const TeamInformation: any = ({
         <PowerstatsList data={{ name: "", powerstats: teamPowerstats }} />
         <Container
           fluid
-          className="p-3 d-flex justify-content-between"
+          className="p-3 d-flex justify-content-between align-items-center"
           children={
             <>
               <LogoutButton />
-              <div>Delete Team</div>
+              <Button
+                className="p-1 m-0"
+                variant="danger"
+                onClick={() => {
+                  removeTeamHandler();
+                }}
+                children={
+                  <>
+                    <GiBurningSkull color="#fff" /> Delete Team
+                  </>
+                }
+              />
             </>
           }
         />

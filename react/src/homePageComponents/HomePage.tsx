@@ -1,4 +1,3 @@
-import { TopSection } from "./TopSection";
 import { AppName } from "../AppName";
 import { SuperheroDataManager } from "./SuperheroDataManager";
 export const HomePage = () => {

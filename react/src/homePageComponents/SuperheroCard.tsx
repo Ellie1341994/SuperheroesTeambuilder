@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import React from "react";
 import { ImCross } from "react-icons/im";
 import { AddSuperheroIcon } from "./AddSuperheroIcon";
+import CharacterSelection from "./CharacterSelection";
 const SuperheroBox: any = styled.div`
   display: flex;
   overflow: hidden;
@@ -55,13 +56,13 @@ const DeleteSuperheroDataButton: any = (props: {
   superheroPosition: number;
 }) => (
   <Button
-    variant="link"
+    variant="danger"
     onClick={() => {
       props.removeSuperheroHandler(props.superheroPosition);
     }}
-    className="text-center p-0 m-0"
+    className="text-center py-1 px-2 m-0"
   >
-    <ImCross size={26} color="#333" />
+    <ImCross size={26} color="#fff" />
   </Button>
 );
 interface SuperheroCardProps {
@@ -95,9 +96,8 @@ export const SuperheroCard: any = (props: SuperheroCardProps) => {
     <SuperheroAlignmentBorderBox As={superheroAlignment}>
       <SuperheroBox id={"superheroBox"}>
         {(() => {
-          let superheroBoxItems: any = undefined;
           if (showSuperheroForm) {
-            superheroBoxItems = (
+            return (
               <SuperheroForm
                 initialValues={formInitialValues}
                 superheroPosition={superheroPosition}
@@ -109,7 +109,7 @@ export const SuperheroCard: any = (props: SuperheroCardProps) => {
               </SuperheroForm>
             );
           } else if (!props.superheroData) {
-            // INITIAL STATE
+            // DEFAULT STATE
             return (
               <AddSuperheroIcon
                 showForm={handleOnClick}
@@ -119,7 +119,7 @@ export const SuperheroCard: any = (props: SuperheroCardProps) => {
           } else {
             // CURRENT CHARACTER
             if (isSuperhero(props.superheroData)) {
-              superheroBoxItems = (
+              return (
                 <Superhero
                   children={
                     <DeleteSuperheroDataButton
@@ -133,52 +133,16 @@ export const SuperheroCard: any = (props: SuperheroCardProps) => {
               );
             } else {
               // CHARACTER SELECTION
-              const QuitOptionId: string = "QuitSuperheroSelection";
-              const QuitSelectionOption: any = (
-                <React.Fragment key={QuitOptionId}>
-                  <option>Select or Quit</option>
-                  <option id={QuitOptionId} value={superheroPosition}>
-                    Quit Selection
-                  </option>
-                </React.Fragment>
-              );
-
-              superheroBoxItems = [QuitSelectionOption];
-              let superheroIndex: number = 0;
-              for (let superhero of props.superheroData) {
-                superheroIndex++;
-                const superheroFullName: string =
-                  superhero.biography["full-name"];
-                superheroBoxItems.push(
-                  <option
-                    value={superheroIndex}
-                    key={superheroFullName + superhero.name}
-                  >
-                    {superheroFullName
-                      ? superheroFullName + `(${superhero.name})`
-                      : superhero.name}
-                  </option>
-                );
-              }
-              superheroBoxItems = (
-                <select
-                  onChange={(event: any) => {
-                    const select: HTMLSelectElement = event.target;
-                    const superhero: any = (
-                      props.superheroData as SuperheroProps[]
-                    )[parseInt(select.value)];
-                    select.options[select.selectedIndex].id === QuitOptionId
-                      ? props.removeSuperhero(select.value)
-                      : props.addCharacterData(superhero, superheroPosition);
-                  }}
-                  key="superheroesList"
-                >
-                  {superheroBoxItems}
-                </select>
+              return (
+                <CharacterSelection
+                  superheroPosition={superheroPosition}
+                  characters={props.superheroData}
+                  removeSuperhero={props.removeSuperhero}
+                  addCharacterData={props.addCharacterData}
+                />
               );
             }
           }
-          return superheroBoxItems;
         })()}
       </SuperheroBox>
     </SuperheroAlignmentBorderBox>

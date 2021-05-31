@@ -12,8 +12,9 @@ export default function LogoutButton() {
         context.setToken("");
       }}
       to="/logout"
+      className="bg-primary text-white p-1 rounded"
     >
-      <IoExitSharp />
+      <IoExitSharp color="#fff" />
       {window.innerWidth > 576 && "Logout"}
     </Link>
   );

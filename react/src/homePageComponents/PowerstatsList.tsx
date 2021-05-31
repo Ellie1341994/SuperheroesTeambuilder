@@ -12,7 +12,6 @@ export const PowerstatsList: any = ({ data }: any) => {
       return 0;
     }
   );
-  console.log(orderedPowerstatsData);
   const powerstats: any = [];
   const weightOrHeightBox: any = [];
   for (let [key, value] of orderedPowerstatsData) {

@@ -22,7 +22,6 @@ export default function TeamTitle() {
       teamNameInput.current.blur();
     }
   }, [modifingTeamName]);
-  console.log(teamNameInput);
   const ChangeTeamNameIcon: any = modifingTeamName ? RiEraserFill : ImPencil;
   React.useEffect(() => {
     localStorage.setItem("teamName", teamName);

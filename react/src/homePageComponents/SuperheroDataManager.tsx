@@ -13,17 +13,18 @@ export class SuperheroDataManager extends React.Component<
   SuperheroDataManagerStateProps
 > {
   // SUPERHEROES_API_URL: string = " https://superheroapi.com/api/" + superheroesApiToken;
+  MAX_SUPERHEROES = 6;
   constructor(_props: any) {
     super(_props);
     this.AddCharacterHandler = this.AddCharacterHandler.bind(this);
     this.removeCharacterHandler = this.removeCharacterHandler.bind(this);
     this.makeCharacterCards = this.makeCharacterCards.bind(this);
+    this.removeTeamHandler = this.removeTeamHandler.bind(this);
     this.validateCharacterRequirements =
       this.validateCharacterRequirements.bind(this);
-    const MAX_SUPERHEROES: number = 6;
     const superheroesInTheTeam: any = JSON.parse(
       localStorage.getItem("userSuperheroesTeam") ??
-        JSON.stringify(Array(MAX_SUPERHEROES))
+        JSON.stringify(Array(this.MAX_SUPERHEROES))
     );
     this.state = {
       superheroesInTheTeam,
@@ -71,13 +72,16 @@ export class SuperheroDataManager extends React.Component<
     superheroData: SuperheroProps | SuperheroProps[],
     position: number
   ) {
+    console.log("addCharacterHandler", superheroData);
     if (!superheroData || isNaN(position) || position < 0 || position > 5) {
+      console.log("addingError1");
       return "Error adding character";
     }
     const error: string | undefined = isSuperhero(superheroData)
       ? this.validateCharacterRequirements(superheroData)
       : undefined;
     if (error) {
+      console.log("addingError2");
       return error;
     }
     this.setState(
@@ -98,6 +102,9 @@ export class SuperheroDataManager extends React.Component<
       state.superheroesInTheTeam[position] = null;
       return state;
     });
+  }
+  removeTeamHandler() {
+    this.setState({ superheroesInTheTeam: Array(this.MAX_SUPERHEROES) });
   }
   makeCharacterCards() {
     const cardsBox: any[] = [];
@@ -130,7 +137,10 @@ export class SuperheroDataManager extends React.Component<
   render() {
     return (
       <>
-        <TeamInformation superheroesData={this.state.superheroesInTheTeam} />
+        <TeamInformation
+          removeTeamHandler={this.removeTeamHandler}
+          superheroesData={this.state.superheroesInTheTeam}
+        />
         <SuperheroTeam> {this.makeCharacterCards()} </SuperheroTeam>
       </>
     );

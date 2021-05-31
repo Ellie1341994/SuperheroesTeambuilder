@@ -3,6 +3,7 @@ import { SuperheroProps } from "./SuperheroProps";
 import superheroesApiToken from "../superheroApiToken";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
 import axios, { AxiosResponse } from "axios";
 interface SuperheroFormProps {
   initialValues: { [key: string]: string };
@@ -68,14 +69,28 @@ export const SuperheroForm: any = (props: SuperheroFormProps) => {
       }}
     >
       {({ isSubmitting }) => (
-        <Form as={FormikForm}>
-          <Form.Group>
-            <Form.Label>Superhero search</Form.Label>
-            <Field as={Form.Control} type="text" name={props.inputName} />
-            <ErrorMessage name={props.inputName} component="div" />
+        <Form className="" as={FormikForm}>
+          <Form.Group className="text-center">
+            <Form.Label
+              style={{ fontWeight: 600 }}
+              children={"Character Search"}
+            />
+            <Field
+              as={Form.Control}
+              placeholder="Character name or id"
+              type="text"
+              name={props.inputName}
+            />
+            <ErrorMessage
+              className="text-danger pt-2"
+              name={props.inputName}
+              component="div"
+            />
           </Form.Group>
-          <Button type="submit" children={"Search"} disabled={isSubmitting} />
-          {props.children}
+          <Container className="m-0 p-0 d-flex justify-content-between">
+            <Button type="submit" children={"Search"} disabled={isSubmitting} />
+            {props.children}
+          </Container>
         </Form>
       )}
     </Formik>
