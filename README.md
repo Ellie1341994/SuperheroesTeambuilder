@@ -1,9 +1,12 @@
 # Superheroes Teambuilder
 Alkemy Ract Challenge
 
-## Note regarding this Application Installation in other evironments
-A file THAT MUST BE named superheroApiToken.ts HAS to be inside the react/src folder
-with an api token obtained from the following page https://superheroapi.com/
+## Note regarding this Application execution
+In order to properly make requests for superheroes
+A file named exactly superheroApiToken.ts
+HAS to be inside the react/src folder
+where YOUR_SUPERHERO_API_TOKEN MUST be replaced by a personal
+token obtained from he following page https://superheroapi.com/
 
 Example code that MUST be inside the file
 ```
