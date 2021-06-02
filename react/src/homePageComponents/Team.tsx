@@ -37,7 +37,7 @@ const BaseContainer: any = styled.div`
 /**
  * @summary You can have superhero clones in the team
  */
-export const SuperheroTeam: any = (props: any) => {
+export const Team: any = (props: any) => {
   return (
     <Container fluid as={BaseContainer}>
       <Container fluid as={TeamContainer}>

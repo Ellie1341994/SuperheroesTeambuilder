@@ -1,10 +1,10 @@
 import { AppName } from "../AppName";
-import { SuperheroDataManager } from "./SuperheroDataManager";
+import { CharacterDataManager } from "./CharacterDataManager";
 export const HomePage = () => {
   return (
     <>
       <AppName>Super Heroes Teambuilder</AppName>
-      <SuperheroDataManager />
+      <CharacterDataManager />
     </>
   );
 };

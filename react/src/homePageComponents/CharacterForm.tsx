@@ -1,32 +1,32 @@
 import { Formik, Form as FormikForm, Field, ErrorMessage } from "formik";
-import { SuperheroProps } from "./SuperheroProps";
-import superheroesApiToken from "../superheroApiToken";
+import { CharacterProps } from "./CharacterProps";
+import superheroApiToken from "../superheroApiToken";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import axios, { AxiosResponse } from "axios";
-interface SuperheroFormProps {
+interface CharacterFormProps {
   initialValues: { [key: string]: string };
-  superheroPosition: number;
+  characterPosition: number;
   addCharacterData: Function;
   inputName: string;
   children: any;
 }
-export const SuperheroForm: any = (props: SuperheroFormProps) => {
+export const CharacterForm: any = (props: CharacterFormProps) => {
   return (
     <Formik
       initialValues={props.initialValues}
       validate={(values: any) => {
         const errors: any = {};
         if (!values[props.inputName]) {
-          errors[props.inputName] = `Superhero name or id required!`;
+          errors[props.inputName] = `Character name or id required!`;
         }
         return errors;
       }}
       onSubmit={async function requestCharacterData(values, { setFieldError }) {
         const identifier: any = values[props.inputName];
         const RELATIVE_BASE_SUPERHERO_URL: string =
-          "/api/" + superheroesApiToken;
+          "/api/" + superheroApiToken;
         const SEARCH_SUPERHERO_URL: string =
           RELATIVE_BASE_SUPERHERO_URL + "/search/" + identifier;
         const DIRECT_SUPERHERO_URL: string =
@@ -41,23 +41,23 @@ export const SuperheroForm: any = (props: SuperheroFormProps) => {
             response: responseMessage,
             error: responseError,
             "results-for": resultsFor,
-            ...superheroData
+            ...characterData
           } = response.data;
 
           if (!responseError) {
             // case for multiple results
             if (resultsFor) {
-              const listOfSuperheroesOrVillians: SuperheroProps[] =
-                superheroData.results.filter((superhero: SuperheroProps) =>
-                  /bad|good/.test(superhero.biography.alignment)
+              const listOfNonNeutralCharacters: CharacterProps[] =
+                characterData.results.filter((character: CharacterProps) =>
+                  /bad|good/.test(character.biography.alignment)
                 );
-              listOfSuperheroesOrVillians.length > 1
-                ? (superheroData = listOfSuperheroesOrVillians)
-                : (superheroData = listOfSuperheroesOrVillians.pop());
+              listOfNonNeutralCharacters.length > 1
+                ? (characterData = listOfNonNeutralCharacters)
+                : (characterData = listOfNonNeutralCharacters.pop());
             }
             responseError = props.addCharacterData(
-              superheroData,
-              props.superheroPosition
+              characterData,
+              props.characterPosition
             );
           }
           if (responseError) {

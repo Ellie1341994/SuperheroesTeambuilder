@@ -1,10 +1,10 @@
 //import styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import {
-  SuperheroProps,
-  SuperHeroPowerstatsProps,
-  isSuperhero,
-} from "./SuperheroProps";
+  CharacterProps,
+  CharacterPowerstatsProps,
+  isCharacter,
+} from "./CharacterProps";
 import TeamTitle from "./TeamTitle";
 import { PowerstatsList } from "./PowerstatsList";
 import LogoutButton from "./LogoutButton";
@@ -18,27 +18,25 @@ function getMetricUnit(unitsSet: [string, string]): number {
   let metricUnit: string | undefined = unitsSet
     .filter((unit) => /kg|cm/.test(unit))
     .pop();
-  //  console.log("metricUnit", metricUnit);
   let parsedUnit: number = parseInt((metricUnit ?? "").replace(/\D+/, "")) ?? 0;
-  //console.log("parsedUnit", parsedUnit);
   return parsedUnit;
 }
 /**
-  @extends SuperHeroPowerstatsProps<number>
+  @extends CharacterPowerstatsProps<number>
   @param height metric unit
   @param weight metric unit
   @param averageHeight metric unit
   @param averageWeight metric unit
  */
-interface TeamPowerstats extends SuperHeroPowerstatsProps<number> {
+interface TeamPowerstats extends CharacterPowerstatsProps<number> {
   height: number;
   weight: number;
 }
 export const TeamInformation: any = ({
-  superheroesData,
+  charactersData,
   removeTeamHandler,
 }: {
-  superheroesData: SuperheroProps[];
+  charactersData: CharacterProps[];
   removeTeamHandler: Function;
 }) => {
   const teamPowerstats: TeamPowerstats = {
@@ -51,30 +49,30 @@ export const TeamInformation: any = ({
     height: 0,
     weight: 0,
   };
-  let dataLength: number = superheroesData.reduce(
-    (counter: number, character: SuperheroProps | SuperheroProps[]) => {
-      return isSuperhero(character) ? counter + 1 : counter;
+  let dataLength: number = charactersData.reduce(
+    (counter: number, character: CharacterProps | CharacterProps[]) => {
+      return isCharacter(character) ? counter + 1 : counter;
     },
     0
   );
-  if (superheroesData) {
+  if (charactersData) {
     let totalWeight: number = 0;
     let totalHeight: number = 0;
-    for (let superhero of superheroesData) {
-      if (isSuperhero(superhero)) {
+    for (let Character of charactersData) {
+      if (isCharacter(Character)) {
         for (let [characteristicName, characteristicValue] of Object.entries(
-          superhero.powerstats
+          Character.powerstats
         )) {
           // calculates sum of powerstats
           let stat: number = /^\d+$/.test(characteristicValue)
             ? parseInt(characteristicValue)
             : 0;
           teamPowerstats[
-            characteristicName as keyof SuperHeroPowerstatsProps
+            characteristicName as keyof CharacterPowerstatsProps
           ] += stat;
           // calculates average weight and height
-          totalWeight += getMetricUnit(superhero.appearance.weight);
-          totalHeight += getMetricUnit(superhero.appearance.height);
+          totalWeight += getMetricUnit(Character.appearance.weight);
+          totalHeight += getMetricUnit(Character.appearance.height);
         }
       }
       // THE CODE BELOW IS A QUICK BUT REALLY BAD FIX FOR AN ERROR I DON'T HAVE TIME TO FIX

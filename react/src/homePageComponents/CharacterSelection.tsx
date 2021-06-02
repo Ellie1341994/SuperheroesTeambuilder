@@ -1,25 +1,25 @@
 import Button from "react-bootstrap/Button";
 import React from "react";
-import { SuperheroProps, isSuperhero } from "./SuperheroProps";
+import { CharacterProps } from "./CharacterProps";
 export default function CharacterSelection({
   characters,
-  superheroPosition,
-  removeSuperhero,
+  characterPosition,
+  removeCharacter,
   addCharacterData,
 }: any) {
   let [error, setError]: any = React.useState("");
   const options: any = [];
-  let superheroIndex: number = 0;
-  for (let superhero of characters) {
-    const superheroFullName: string = superhero.biography["full-name"];
+  let characterIndex: number = 0;
+  for (let character of characters) {
+    const characterFullName: string = character.biography["full-name"];
     options.push(
-      <option value={superheroIndex} key={superheroFullName + superhero.name}>
-        {(superheroFullName
-          ? superheroFullName + ` (${superhero.name}) `
-          : superhero.name) + `(${superhero.biography.alignment})`}
+      <option value={characterIndex} key={characterFullName + character.name}>
+        {(characterFullName
+          ? characterFullName + ` (${character.name}) `
+          : character.name) + `(${character.biography.alignment})`}
       </option>
     );
-    superheroIndex++;
+    characterIndex++;
   }
   return (
     <label
@@ -39,15 +39,15 @@ export default function CharacterSelection({
               const select: HTMLSelectElement = event.target;
               const selectedOption: HTMLOptionElement =
                 select.options[select.selectedIndex];
-              const superhero: any = (characters as SuperheroProps[])[
+              const character: any = (characters as CharacterProps[])[
                 parseInt(selectedOption.value)
               ];
-              let error: any = addCharacterData(superhero, superheroPosition);
+              let error: any = addCharacterData(character, characterPosition);
               if (error) {
                 setError(error);
               }
             }}
-            key="superheroesList"
+            key="characteresList"
           >
             {options}
           </select>
@@ -56,7 +56,7 @@ export default function CharacterSelection({
             className="flex-shrink-1 text-center"
             children="Quit"
             onClick={() => {
-              removeSuperhero(superheroPosition);
+              removeCharacter(characterPosition);
             }}
           />
           <p className="text-danger" children={error} />

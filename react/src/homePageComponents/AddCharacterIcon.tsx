@@ -1,4 +1,4 @@
-export const AddSuperheroIcon: any = (props: any) => (
+export const AddCharacterIcon: any = (props: any) => (
   <svg
     onClick={props.showForm}
     stroke="#333"

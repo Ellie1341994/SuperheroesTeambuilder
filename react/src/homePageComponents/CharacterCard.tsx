@@ -1,13 +1,13 @@
 import styled from "styled-components";
-import { SuperheroProps, isSuperhero } from "./SuperheroProps";
-import { SuperheroForm } from "./SuperheroForm";
-import { Superhero } from "./Superhero";
+import { CharacterProps, isCharacter } from "./CharacterProps";
+import { CharacterForm } from "./CharacterForm";
+import { Character } from "./Character";
 import Button from "react-bootstrap/Button";
 import React from "react";
 import { ImCross } from "react-icons/im";
-import { AddSuperheroIcon } from "./AddSuperheroIcon";
+import { AddCharacterIcon } from "./AddCharacterIcon";
 import CharacterSelection from "./CharacterSelection";
-const SuperheroBox: any = styled.div`
+const CharacterBox: any = styled.div`
   display: flex;
   overflow: hidden;
   justify-content: center;
@@ -21,7 +21,7 @@ const SuperheroBox: any = styled.div`
     /* matches "sm" react boostrap width value */
   }
 `;
-const SuperheroAlignmentBorderBox: any = styled.div`
+const CharacterAlignmentBorderBox: any = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -51,100 +51,100 @@ const QuitFormButton: any = (props: { quitFormHandler: any }) => (
     children="Quit form"
   />
 );
-const DeleteSuperheroDataButton: any = (props: {
-  removeSuperheroHandler: Function;
-  superheroPosition: number;
+const DeletecharacterDataButton: any = (props: {
+  removeCharacterHandler: Function;
+  characterPosition: number;
 }) => (
   <Button
     variant="danger"
     onClick={() => {
-      props.removeSuperheroHandler(props.superheroPosition);
+      props.removeCharacterHandler(props.characterPosition);
     }}
     className="text-center py-1 px-2 m-0"
   >
     <ImCross size={26} color="#fff" />
   </Button>
 );
-interface SuperheroCardProps {
+interface CharacterCardProps {
   addCharacterData: Function;
-  superheroData: SuperheroProps | SuperheroProps[];
-  removeSuperhero: Function;
+  characterData: CharacterProps | CharacterProps[];
+  removeCharacter: Function;
   position: number;
 }
-export const SuperheroCard: any = (props: SuperheroCardProps) => {
-  const [showSuperheroForm, setShowSuperheroForm] = React.useState(false);
+export const CharacterCard: any = (props: CharacterCardProps) => {
+  const [showCharacterForm, setShowCharacterForm] = React.useState(false);
   React.useEffect(() => {
-    setShowSuperheroForm(
-      (previousState: any) => previousState && props.superheroData === null
+    setShowCharacterForm(
+      (previousState: any) => previousState && props.characterData === null
     );
-  }, [props.superheroData]);
+  }, [props.characterData]);
   const handleOnClick: any = (event: any) => {
     event.preventDefault();
-    setShowSuperheroForm(true);
+    setShowCharacterForm(true);
     if (event.target.id === "QuitFormButton") {
-      setShowSuperheroForm(false);
+      setShowCharacterForm(false);
     }
     return undefined;
   };
-  let superheroPosition: number = props.position;
-  let superheroAlignment: string = isSuperhero(props.superheroData)
-    ? props.superheroData.biography.alignment
+  let characterPosition: number = props.position;
+  let characterAlignment: string = isCharacter(props.characterData)
+    ? props.characterData.biography.alignment
     : "neutral";
-  let inputName: string = "identifier" + superheroPosition;
+  let inputName: string = "identifier" + characterPosition;
   let formInitialValues: any = { [inputName]: "" };
   return (
-    <SuperheroAlignmentBorderBox As={superheroAlignment}>
-      <SuperheroBox id={"superheroBox"}>
+    <CharacterAlignmentBorderBox As={characterAlignment}>
+      <CharacterBox id={"CharacterBox"}>
         {(() => {
-          if (showSuperheroForm) {
+          if (showCharacterForm) {
             return (
-              <SuperheroForm
+              <CharacterForm
                 initialValues={formInitialValues}
-                superheroPosition={superheroPosition}
-                //getSuperheroData={props.getSuperheroData}
+                characterPosition={characterPosition}
+                //getcharacterData={props.getcharacterData}
                 addCharacterData={props.addCharacterData}
                 inputName={inputName}
               >
                 <QuitFormButton quitFormHandler={handleOnClick} />
-              </SuperheroForm>
+              </CharacterForm>
             );
-          } else if (!props.superheroData) {
+          } else if (!props.characterData) {
             // DEFAULT STATE
             return (
-              <AddSuperheroIcon
+              <AddCharacterIcon
                 showForm={handleOnClick}
-                key={"superheroBoxIcon"}
+                key={"CharacterBoxIcon"}
               />
             );
           } else {
             // CURRENT CHARACTER
-            if (isSuperhero(props.superheroData)) {
+            if (isCharacter(props.characterData)) {
               return (
-                <Superhero
+                <Character
                   children={
-                    <DeleteSuperheroDataButton
-                      key={"DeleteSuperheroDataButton"}
-                      superheroPosition={superheroPosition}
-                      removeSuperheroHandler={props.removeSuperhero}
+                    <DeletecharacterDataButton
+                      key={"DeletecharacterDataButton"}
+                      characterPosition={characterPosition}
+                      removeCharacterHandler={props.removeCharacter}
                     />
                   }
-                  curriculumVitae={props.superheroData}
+                  curriculumVitae={props.characterData}
                 />
               );
             } else {
               // CHARACTER SELECTION
               return (
                 <CharacterSelection
-                  superheroPosition={superheroPosition}
-                  characters={props.superheroData}
-                  removeSuperhero={props.removeSuperhero}
+                  characterPosition={characterPosition}
+                  characters={props.characterData}
+                  removeCharacter={props.removeCharacter}
                   addCharacterData={props.addCharacterData}
                 />
               );
             }
           }
         })()}
-      </SuperheroBox>
-    </SuperheroAlignmentBorderBox>
+      </CharacterBox>
+    </CharacterAlignmentBorderBox>
   );
 };

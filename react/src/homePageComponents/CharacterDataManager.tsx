@@ -1,18 +1,18 @@
 import React from "react";
-import { SuperheroTeam } from "./SuperHeroTeam";
-import { SuperheroCard } from "./SuperheroCard";
+import { Team } from "./Team";
+import { CharacterCard } from "./CharacterCard";
 import Col from "react-bootstrap/Col";
-import { SuperheroProps, isSuperhero } from "./SuperheroProps";
+import { CharacterProps, isCharacter } from "./CharacterProps";
 import { TeamInformation } from "./TeamInformation";
-interface SuperheroDataManagerStateProps {
-  superheroesInTheTeam: SuperheroProps[] | SuperheroProps[][];
+interface CharacterDataManagerStateProps {
+  characteresInTheTeam: CharacterProps[] | CharacterProps[][];
 }
-interface SuperheroDataManagerAttributeProps {}
-export class SuperheroDataManager extends React.Component<
-  SuperheroDataManagerAttributeProps,
-  SuperheroDataManagerStateProps
+interface CharacterDataManagerAttributeProps {}
+export class CharacterDataManager extends React.Component<
+  CharacterDataManagerAttributeProps,
+  CharacterDataManagerStateProps
 > {
-  // SUPERHEROES_API_URL: string = " https://superheroapi.com/api/" + superheroesApiToken;
+  // SUPERHEROES_API_URL: string = " https://characterapi.com/api/" + characteresApiToken;
   MAX_SUPERHEROES = 6;
   constructor(_props: any) {
     super(_props);
@@ -22,18 +22,18 @@ export class SuperheroDataManager extends React.Component<
     this.removeTeamHandler = this.removeTeamHandler.bind(this);
     this.validateCharacterRequirements =
       this.validateCharacterRequirements.bind(this);
-    const superheroesInTheTeam: any = JSON.parse(
-      localStorage.getItem("userSuperheroesTeam") ??
+    const characteresInTheTeam: any = JSON.parse(
+      localStorage.getItem("userCharactersTeam") ??
         JSON.stringify(Array(this.MAX_SUPERHEROES))
     );
     this.state = {
-      superheroesInTheTeam,
+      characteresInTheTeam,
     };
   }
   componentDidUpdate() {
     localStorage.setItem(
-      "userSuperheroesTeam",
-      JSON.stringify(this.state.superheroesInTheTeam)
+      "userCharactersTeam",
+      JSON.stringify(this.state.characteresInTheTeam)
     );
   }
   /**
@@ -42,14 +42,14 @@ export class SuperheroDataManager extends React.Component<
    * Half the team must be bad and the other half good
    */
   validateCharacterRequirements(
-    characterData: SuperheroProps
+    characterData: CharacterProps
   ): string | undefined {
     let alignment: string = characterData.biography.alignment;
     let isCharacterBad: boolean = /bad/i.test(alignment);
     let goodCharacterCounter: number = !isCharacterBad ? 1 : 0;
     let badCharacterCounter: number = isCharacterBad ? -1 : 0;
-    for (let character of this.state.superheroesInTheTeam) {
-      if (!isSuperhero(character)) {
+    for (let character of this.state.characteresInTheTeam) {
+      if (!isCharacter(character)) {
         continue;
       }
       if (characterData.id === character.id) {
@@ -69,16 +69,16 @@ export class SuperheroDataManager extends React.Component<
     }
   }
   AddCharacterHandler(
-    superheroData: SuperheroProps | SuperheroProps[],
+    characterData: CharacterProps | CharacterProps[],
     position: number
   ) {
-    console.log("addCharacterHandler", superheroData);
-    if (!superheroData || isNaN(position) || position < 0 || position > 5) {
+    console.log("addCharacterHandler", characterData);
+    if (!characterData || isNaN(position) || position < 0 || position > 5) {
       console.log("addingError1");
       return "Error adding character";
     }
-    const error: string | undefined = isSuperhero(superheroData)
-      ? this.validateCharacterRequirements(superheroData)
+    const error: string | undefined = isCharacter(characterData)
+      ? this.validateCharacterRequirements(characterData)
       : undefined;
     if (error) {
       console.log("addingError2");
@@ -86,25 +86,25 @@ export class SuperheroDataManager extends React.Component<
     }
     this.setState(
       (
-        state: SuperheroDataManagerStateProps,
-        _props: SuperheroDataManagerAttributeProps
+        state: CharacterDataManagerStateProps,
+        _props: CharacterDataManagerAttributeProps
       ) => {
-        state.superheroesInTheTeam[position] = superheroData;
+        state.characteresInTheTeam[position] = characterData;
         return state;
       }
     );
   }
   removeCharacterHandler(position: number) {
     if (isNaN(position) || 0 > position || position > 5) {
-      return "remove superhero error";
+      return "remove character error";
     }
     this.setState((state: any, _props: any) => {
-      state.superheroesInTheTeam[position] = null;
+      state.characteresInTheTeam[position] = null;
       return state;
     });
   }
   removeTeamHandler() {
-    this.setState({ superheroesInTheTeam: Array(this.MAX_SUPERHEROES) });
+    this.setState({ characteresInTheTeam: Array(this.MAX_SUPERHEROES) });
   }
   makeCharacterCards() {
     const cardsBox: any[] = [];
@@ -122,10 +122,10 @@ export class SuperheroDataManager extends React.Component<
           key={"Col" + position}
         >
           {/*Cards must recieve the state directly otherwise all cards get rerendered on any modification done to any other card*/}
-          <SuperheroCard
+          <CharacterCard
             position={position}
-            superheroData={this.state.superheroesInTheTeam[position]}
-            removeSuperhero={this.removeCharacterHandler}
+            characterData={this.state.characteresInTheTeam[position]}
+            removeCharacter={this.removeCharacterHandler}
             addCharacterData={this.AddCharacterHandler}
           />
         </Col>
@@ -139,9 +139,9 @@ export class SuperheroDataManager extends React.Component<
       <>
         <TeamInformation
           removeTeamHandler={this.removeTeamHandler}
-          superheroesData={this.state.superheroesInTheTeam}
+          charactersData={this.state.characteresInTheTeam}
         />
-        <SuperheroTeam> {this.makeCharacterCards()} </SuperheroTeam>
+        <Team children={this.makeCharacterCards()} />
       </>
     );
   }

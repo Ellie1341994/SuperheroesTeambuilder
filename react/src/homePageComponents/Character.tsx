@@ -1,4 +1,4 @@
-import { SuperheroProps } from "./SuperheroProps";
+import { CharacterProps } from "./CharacterProps";
 import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
@@ -28,7 +28,7 @@ const ShowCharacterDetailsButton: any = (props: any) => {
     </Button>
   );
 };
-const SuperheroDetails: any = ({ data }: any) => {
+const CharacterDetails: any = ({ data }: any) => {
   const detailsBox: any = [];
   const appearance: any = data.appearance;
   const aliases = data.biography.aliases;
@@ -66,12 +66,12 @@ const SuperheroDetails: any = ({ data }: any) => {
   );
 };
 
-export const Superhero: any = (props: {
+export const Character: any = (props: {
   children: any;
-  curriculumVitae: SuperheroProps;
+  curriculumVitae: CharacterProps;
 }) => {
-  const data: SuperheroProps = props.curriculumVitae;
-  let [displaySuperheroInformation, setDisplaySuperheroInformation] =
+  const data: CharacterProps = props.curriculumVitae;
+  let [displayCharacterInformation, setDisplayCharacterInformation] =
     React.useState(false);
   return (
     <>
@@ -100,8 +100,8 @@ export const Superhero: any = (props: {
               className="h-80 flex-wrap"
               fluid
             >
-              {displaySuperheroInformation ? (
-                <SuperheroDetails data={data} />
+              {displayCharacterInformation ? (
+                <CharacterDetails data={data} />
               ) : (
                 <PowerstatsList data={data} />
               )}
@@ -112,8 +112,8 @@ export const Superhero: any = (props: {
                   {props.children}
                   <ShowCharacterDetailsButton
                     className="p-1 m-0 text-center"
-                    onClickHandler={setDisplaySuperheroInformation}
-                    show={displaySuperheroInformation}
+                    onClickHandler={setDisplayCharacterInformation}
+                    show={displayCharacterInformation}
                   />
                 </>
               }

@@ -47,7 +47,7 @@ export default function TeamTitle() {
               id="teamNameInput"
               disabled={!modifingTeamName}
               value={teamName}
-              aria-label="Superhero team name"
+              aria-label="Character team name"
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 event.target.focus();
                 setTeamName(event.target.value);
