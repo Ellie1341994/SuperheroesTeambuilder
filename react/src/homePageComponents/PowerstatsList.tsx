@@ -25,7 +25,7 @@ export const PowerstatsList: any = ({ data }: any) => {
     }
     (!isPowerstat ? weightOrHeightBox : powerstats).push(
       <ListGroup.Item
-        className="bg-transparent d-flex justify-content-between text-capitalize p-0"
+        className="bg-transparent d-flex justify-content-between flex-wrap text-capitalize p-0"
         key={key + data.name}
       >
         <strong style={{ textOverflow: "elipsis" }} children={key + ":"} />
