@@ -18,7 +18,8 @@ function getMetricUnit(unitsSet: [string, string]): number {
   let metricUnit: string | undefined = unitsSet
     .filter((unit) => /kg|cm/.test(unit))
     .pop();
-  let parsedUnit: number = parseInt((metricUnit ?? "").replace(/\D+/, "")) ?? 0;
+  let unit: string = (metricUnit ?? "").replace(/\D+/, "");
+  let parsedUnit: number = parseInt(unit) ?? 0;
   return parsedUnit;
 }
 /**
@@ -56,8 +57,6 @@ export const TeamInformation: any = ({
     0
   );
   if (charactersData) {
-    let totalWeight: number = 0;
-    let totalHeight: number = 0;
     for (let Character of charactersData) {
       if (isCharacter(Character)) {
         for (let [characteristicName, characteristicValue] of Object.entries(
@@ -70,24 +69,15 @@ export const TeamInformation: any = ({
           teamPowerstats[
             characteristicName as keyof CharacterPowerstatsProps
           ] += stat;
-          // calculates average weight and height
-          totalWeight += getMetricUnit(Character.appearance.weight);
-          totalHeight += getMetricUnit(Character.appearance.height);
         }
+        // calculates average weight and height
+        teamPowerstats.weight += getMetricUnit(Character.appearance.weight);
+        teamPowerstats.height += getMetricUnit(Character.appearance.height);
       }
-      // THE CODE BELOW IS A QUICK BUT REALLY BAD FIX FOR AN ERROR I DON'T HAVE TIME TO FIX
-      // WHERE SOMEHOW THE WEIGHT AND HEIGHT VALUES ARE CALCULATED SIX TIMES MORE
-      const BUG_QUICKFIX_VALUE: number = 6;
-      teamPowerstats.height = totalHeight / BUG_QUICKFIX_VALUE;
-      teamPowerstats.weight = totalWeight / BUG_QUICKFIX_VALUE;
-      if (dataLength > 1) {
-        teamPowerstats.height = Math.trunc(
-          totalHeight / BUG_QUICKFIX_VALUE / dataLength
-        );
-        teamPowerstats.weight = Math.trunc(
-          totalWeight / BUG_QUICKFIX_VALUE / dataLength
-        );
-      }
+    }
+    if (dataLength > 1) {
+      teamPowerstats.height = Math.trunc(teamPowerstats.height / dataLength);
+      teamPowerstats.weight = Math.trunc(teamPowerstats.weight / dataLength);
     }
   }
   return (

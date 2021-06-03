@@ -74,53 +74,52 @@ export const Character: any = (props: {
   let [displayCharacterInformation, setDisplayCharacterInformation] =
     React.useState(false);
   return (
-    <>
-      <Container className="d-flex flex-column m-0  h-100 w-100">
-        <Container className="d-flex justify-content-center p-0 m-0 h-10">
-          <h3 style={{ fontFamily: "serif" }} className=" p-0 m-0">
-            {data.name}
-          </h3>
-        </Container>
-        <Container style={{ height: "88%" }} className="d-flex  p-0 m-0  w-100">
-          <Image
-            style={{
-              margin: "5%",
-              borderRadius: "10%",
-              boxShadow: "0 0 5px #333",
-            }}
-            fluid
-            src={data.image.url}
-          />
+    <Container className="d-flex flex-column m-0  h-100 w-100">
+      <Container className="d-flex justify-content-center p-0 m-0 h-10">
+        <h3 style={{ fontFamily: "serif" }} className=" p-0 m-0">
+          {data.name}
+        </h3>
+      </Container>
+      <Container style={{ height: "88%" }} className="d-flex  p-0 m-0  w-100">
+        <Image
+          alt="DC/MarvelCharacter"
+          style={{
+            margin: "5%",
+            borderRadius: "10%",
+            boxShadow: "0 0 5px #333",
+          }}
+          fluid
+          src={data.image.url}
+        />
+        <Container
+          className="d-flex flex-column p-0 m-0  w-50"
+          style={{ justifyContent: "space-evenly" }}
+        >
           <Container
-            className="d-flex flex-column p-0 m-0  w-50"
-            style={{ justifyContent: "space-evenly" }}
+            style={{ overflowY: "scroll" }}
+            className="h-80 flex-wrap"
+            fluid
           >
-            <Container
-              style={{ overflowY: "scroll" }}
-              className="h-80 flex-wrap"
-              fluid
-            >
-              {displayCharacterInformation ? (
-                <CharacterDetails data={data} />
-              ) : (
-                <PowerstatsList data={data} />
-              )}
-            </Container>
-            <CharacterActionButtonsRow
-              children={
-                <>
-                  {props.children}
-                  <ShowCharacterDetailsButton
-                    className="p-1 m-0 text-center"
-                    onClickHandler={setDisplayCharacterInformation}
-                    show={displayCharacterInformation}
-                  />
-                </>
-              }
-            />
+            {displayCharacterInformation ? (
+              <CharacterDetails data={data} />
+            ) : (
+              <PowerstatsList data={data} />
+            )}
           </Container>
+          <CharacterActionButtonsRow
+            children={
+              <>
+                {props.children}
+                <ShowCharacterDetailsButton
+                  className="p-1 m-0 text-center"
+                  onClickHandler={setDisplayCharacterInformation}
+                  show={displayCharacterInformation}
+                />
+              </>
+            }
+          />
         </Container>
       </Container>
-    </>
+    </Container>
   );
 };

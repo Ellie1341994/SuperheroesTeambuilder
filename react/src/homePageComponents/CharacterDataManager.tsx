@@ -8,15 +8,21 @@ interface CharacterDataManagerStateProps {
   characteresInTheTeam: CharacterProps[] | CharacterProps[][];
 }
 interface CharacterDataManagerAttributeProps {}
+/**
+  @constant MAX_CHARACTERS number
+  @function addCharacterHandler
+  @function removeCharacterHandler
+  @function removeTeamHandler
+  @function validateCharacterRequirements
+ */
 export class CharacterDataManager extends React.Component<
   CharacterDataManagerAttributeProps,
   CharacterDataManagerStateProps
 > {
-  // SUPERHEROES_API_URL: string = " https://characterapi.com/api/" + characteresApiToken;
-  MAX_SUPERHEROES = 6;
+  MAX_CHARACTERS = 6;
   constructor(_props: any) {
     super(_props);
-    this.AddCharacterHandler = this.AddCharacterHandler.bind(this);
+    this.addCharacterHandler = this.addCharacterHandler.bind(this);
     this.removeCharacterHandler = this.removeCharacterHandler.bind(this);
     this.makeCharacterCards = this.makeCharacterCards.bind(this);
     this.removeTeamHandler = this.removeTeamHandler.bind(this);
@@ -24,7 +30,7 @@ export class CharacterDataManager extends React.Component<
       this.validateCharacterRequirements.bind(this);
     const characteresInTheTeam: any = JSON.parse(
       localStorage.getItem("userCharactersTeam") ??
-        JSON.stringify(Array(this.MAX_SUPERHEROES))
+        JSON.stringify(Array(this.MAX_CHARACTERS))
     );
     this.state = {
       characteresInTheTeam,
@@ -37,7 +43,6 @@ export class CharacterDataManager extends React.Component<
     );
   }
   /**
-   * Character must not be neutral
    * Character must not already be a team member
    * Half the team must be bad and the other half good
    */
@@ -63,25 +68,20 @@ export class CharacterDataManager extends React.Component<
       }
     }
     if (badCharacterCounter < -3 || goodCharacterCounter > 3) {
-      return /neutral/i.test(alignment)
-        ? "Can't add neutral heroes"
-        : "Team alignment is unbalanced";
+      return "Team alignment is unbalanced";
     }
   }
-  AddCharacterHandler(
+  addCharacterHandler(
     characterData: CharacterProps | CharacterProps[],
     position: number
   ) {
-    console.log("addCharacterHandler", characterData);
     if (!characterData || isNaN(position) || position < 0 || position > 5) {
-      console.log("addingError1");
       return "Error adding character";
     }
     const error: string | undefined = isCharacter(characterData)
       ? this.validateCharacterRequirements(characterData)
       : undefined;
     if (error) {
-      console.log("addingError2");
       return error;
     }
     this.setState(
@@ -104,12 +104,12 @@ export class CharacterDataManager extends React.Component<
     });
   }
   removeTeamHandler() {
-    this.setState({ characteresInTheTeam: Array(this.MAX_SUPERHEROES) });
+    this.setState({ characteresInTheTeam: Array(this.MAX_CHARACTERS) });
   }
   makeCharacterCards() {
     const cardsBox: any[] = [];
     for (let position: number = 0; position < 6; position++) {
-      const cardBox: any = (
+      const Card: any = (
         <Col
           style={{
             display: "flex",
@@ -126,11 +126,11 @@ export class CharacterDataManager extends React.Component<
             position={position}
             characterData={this.state.characteresInTheTeam[position]}
             removeCharacter={this.removeCharacterHandler}
-            addCharacterData={this.AddCharacterHandler}
+            addCharacterData={this.addCharacterHandler}
           />
         </Col>
       );
-      cardsBox.push(cardBox);
+      cardsBox.push(Card);
     }
     return cardsBox;
   }
