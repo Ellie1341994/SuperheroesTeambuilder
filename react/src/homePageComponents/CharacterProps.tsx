@@ -55,7 +55,11 @@ export interface CharacterProps {
   };
 }
 export function isCharacter(
-  object: CharacterProps | CharacterProps[]
+  object: CharacterProps | CharacterProps[] | null
 ): object is CharacterProps {
-  return object && (object as CharacterProps).biography !== undefined;
+  return (
+    object !== undefined &&
+    object !== null &&
+    (object as CharacterProps).biography !== undefined
+  );
 }

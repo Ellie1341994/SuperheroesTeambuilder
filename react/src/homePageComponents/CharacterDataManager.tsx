@@ -4,8 +4,9 @@ import { CharacterCard } from "./CharacterCard";
 import Col from "react-bootstrap/Col";
 import { CharacterProps, isCharacter } from "./CharacterProps";
 import { TeamInformation } from "./TeamInformation";
+type CharactersInTheTeamType = CharacterProps[] | CharacterProps[][] | null[];
 interface CharacterDataManagerStateProps {
-  characteresInTheTeam: CharacterProps[] | CharacterProps[][];
+  characteresInTheTeam: CharactersInTheTeamType;
 }
 interface CharacterDataManagerAttributeProps {}
 /**
@@ -20,7 +21,7 @@ export class CharacterDataManager extends React.Component<
   CharacterDataManagerStateProps
 > {
   MAX_CHARACTERS = 6;
-  constructor(_props: any) {
+  constructor(_props: CharacterDataManagerAttributeProps) {
     super(_props);
     this.addCharacterHandler = this.addCharacterHandler.bind(this);
     this.removeCharacterHandler = this.removeCharacterHandler.bind(this);
@@ -28,7 +29,7 @@ export class CharacterDataManager extends React.Component<
     this.removeTeamHandler = this.removeTeamHandler.bind(this);
     this.validateCharacterRequirements =
       this.validateCharacterRequirements.bind(this);
-    const characteresInTheTeam: any = JSON.parse(
+    const characteresInTheTeam: CharactersInTheTeamType = JSON.parse(
       localStorage.getItem("userCharactersTeam") ??
         JSON.stringify(Array(this.MAX_CHARACTERS))
     );
@@ -98,18 +99,23 @@ export class CharacterDataManager extends React.Component<
     if (isNaN(position) || 0 > position || position > 5) {
       return "remove character error";
     }
-    this.setState((state: any, _props: any) => {
-      state.characteresInTheTeam[position] = null;
-      return state;
-    });
+    this.setState(
+      (
+        state: CharacterDataManagerStateProps,
+        _props: CharacterDataManagerAttributeProps
+      ) => {
+        state.characteresInTheTeam[position] = null;
+        return state;
+      }
+    );
   }
   removeTeamHandler() {
     this.setState({ characteresInTheTeam: Array(this.MAX_CHARACTERS) });
   }
   makeCharacterCards() {
-    const cardsBox: any[] = [];
+    const cardsBox: JSX.Element[] = [];
     for (let position: number = 0; position < 6; position++) {
-      const Card: any = (
+      const Card: JSX.Element = (
         <Col
           style={{
             display: "flex",

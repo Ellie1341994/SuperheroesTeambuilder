@@ -11,8 +11,8 @@ import LogoutButton from "./LogoutButton";
 import Button from "react-bootstrap/Button";
 import { GiBurningSkull } from "react-icons/gi";
 /**
- *@param
- *@returns either a string as a metric unit or undefined if argument is not one
+ *@param unitsSet strings must be metric/imperaial units ex: ["100 cm", "5'2"] ["55 kg", "65 lb"]
+ *@returns either the number taken from the metric unit string or undefined if argument is not one
  */
 function getMetricUnit(unitsSet: [string, string]): number {
   let metricUnit: string | undefined = unitsSet
@@ -50,7 +50,7 @@ export const TeamInformation: any = ({
     height: 0,
     weight: 0,
   };
-  let dataLength: number = charactersData.reduce(
+  let numberOfcharactersInTheTeam: number = charactersData.reduce(
     (counter: number, character: CharacterProps | CharacterProps[]) => {
       return isCharacter(character) ? counter + 1 : counter;
     },
@@ -75,9 +75,13 @@ export const TeamInformation: any = ({
         teamPowerstats.height += getMetricUnit(Character.appearance.height);
       }
     }
-    if (dataLength > 1) {
-      teamPowerstats.height = Math.trunc(teamPowerstats.height / dataLength);
-      teamPowerstats.weight = Math.trunc(teamPowerstats.weight / dataLength);
+    if (numberOfcharactersInTheTeam > 1) {
+      teamPowerstats.height = Math.trunc(
+        teamPowerstats.height / numberOfcharactersInTheTeam
+      );
+      teamPowerstats.weight = Math.trunc(
+        teamPowerstats.weight / numberOfcharactersInTheTeam
+      );
     }
   }
   return (

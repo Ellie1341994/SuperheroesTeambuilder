@@ -1,10 +1,16 @@
 import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
-export const PowerstatsList: any = ({ data }: any) => {
+import { CharacterProps } from "./CharacterProps";
+export const PowerstatsList: any = ({ data }: { data: CharacterProps }) => {
   let areValuesNumber: boolean = false;
-  /** @summary Order is descending */
-  let orderedPowerstatsData: any = Object.entries(data.powerstats).sort(
-    ([_firstKey, firstValue]: any, [_secondKey, secondValue]: any) => {
+  /** @summary Descending order */
+  let orderedPowerstatsData: Array<[string, any]> = Object.entries(
+    data.powerstats
+  ).sort(
+    (
+      [_firstKey, firstValue]: [string, any],
+      [_secondKey, secondValue]: [string, any]
+    ) => {
       areValuesNumber = /\d+/.test(firstValue + secondValue);
       if (areValuesNumber) {
         return secondValue - firstValue;
@@ -12,8 +18,8 @@ export const PowerstatsList: any = ({ data }: any) => {
       return 0;
     }
   );
-  const powerstats: any = [];
-  const weightOrHeightBox: any = [];
+  const powerstats: JSX.Element[] = [];
+  const weightOrHeightBox: JSX.Element[] = [];
   for (let [key, value] of orderedPowerstatsData) {
     if (value === "null") {
       value = undefined;

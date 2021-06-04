@@ -1,4 +1,4 @@
-import { CharacterProps } from "./CharacterProps";
+import { CharacterProps, CharacterAppearenceProps } from "./CharacterProps";
 import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
@@ -8,12 +8,16 @@ import { GiOpenBook } from "react-icons/gi";
 import React from "react";
 import styled from "styled-components";
 import { PowerstatsList } from "./PowerstatsList";
-const CharacterActionButtonsRow: any = styled.div`
+const CharacterActionButtonsRow: React.FunctionComponent = styled.div`
   display: flex;
   justify-content: space-evenly;
   padding: 0 3%;
 `;
-const ShowCharacterDetailsButton: any = (props: any) => {
+const ShowCharacterDetailsButton: React.FunctionComponent<{
+  className: string;
+  onClickHandler: Function;
+  show: boolean;
+}> = (props) => {
   return (
     <Button
       className={props.className}
@@ -28,18 +32,22 @@ const ShowCharacterDetailsButton: any = (props: any) => {
     </Button>
   );
 };
-const CharacterDetails: any = ({ data }: any) => {
-  const detailsBox: any = [];
+const CharacterDetails: React.FunctionComponent<{ data: CharacterProps }> = ({
+  data,
+}) => {
+  const detailsBox: JSX.Element[] = [];
   const appearance: any = data.appearance;
   const aliases = data.biography.aliases;
   let getRandomIndex: Function = (max: number) =>
     Math.floor(Math.random() * max);
   let randomAliasIndex: number = getRandomIndex(aliases.length);
-  const details: any = {
+  const details:
+    | { workplace: string; alias: string }
+    | CharacterAppearenceProps = {
     height: appearance.height,
     weight: appearance.weight,
-    "hair color": appearance["hair-color"],
-    "eye color": appearance["eye-colo"],
+    "hair-color": appearance["hair-color"],
+    "eye-color": appearance["eye-colo"],
     workplace: data.work.base,
     alias: aliases[randomAliasIndex],
   };
@@ -47,7 +55,7 @@ const CharacterDetails: any = ({ data }: any) => {
     if (Array.isArray(value)) {
       value = value.join(" or ");
     }
-    detailsBox.push(
+    let DetailItem: JSX.Element = (
       <ListGroup.Item
         className="d-flex flex-wrap justify-content-between text-capitalize p-1"
         key={key + value}
@@ -56,6 +64,7 @@ const CharacterDetails: any = ({ data }: any) => {
         {value || "..."}
       </ListGroup.Item>
     );
+    detailsBox.push(DetailItem);
   }
   return (
     <Container
@@ -66,10 +75,10 @@ const CharacterDetails: any = ({ data }: any) => {
   );
 };
 
-export const Character: any = (props: {
+export const Character: React.FunctionComponent<{
   children: any;
   curriculumVitae: CharacterProps;
-}) => {
+}> = (props) => {
   const data: CharacterProps = props.curriculumVitae;
   let [displayCharacterInformation, setDisplayCharacterInformation] =
     React.useState(false);
@@ -106,18 +115,14 @@ export const Character: any = (props: {
               <PowerstatsList data={data} />
             )}
           </Container>
-          <CharacterActionButtonsRow
-            children={
-              <>
-                {props.children}
-                <ShowCharacterDetailsButton
-                  className="p-1 m-0 text-center"
-                  onClickHandler={setDisplayCharacterInformation}
-                  show={displayCharacterInformation}
-                />
-              </>
-            }
-          />
+          <CharacterActionButtonsRow>
+            {props.children}
+            <ShowCharacterDetailsButton
+              className="p-1 m-0 text-center"
+              onClickHandler={setDisplayCharacterInformation}
+              show={displayCharacterInformation}
+            />
+          </CharacterActionButtonsRow>
         </Container>
       </Container>
     </Container>

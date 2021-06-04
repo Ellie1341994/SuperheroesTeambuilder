@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { StyledComponent } from "styled-components";
 import { CharacterProps, isCharacter } from "./CharacterProps";
 import { CharacterForm } from "./CharacterForm";
 import { Character } from "./Character";
@@ -43,7 +43,7 @@ const transitionStyles = {
   },
   unmounted: {},
 };
-const CharacterBox: any = styled.div`
+const CharacterBox: StyledComponent<"div", any, {}, never> = styled.div`
   display: flex;
   overflow: hidden;
   justify-content: center;
@@ -57,7 +57,12 @@ const CharacterBox: any = styled.div`
     /* matches "sm" react boostrap width value */
   }
 `;
-const CharacterAlignmentBorderBox: any = styled.div`
+const CharacterAlignmentBorderBox: StyledComponent<
+  "div",
+  any,
+  { As: string },
+  never
+> = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,13 +71,13 @@ const CharacterAlignmentBorderBox: any = styled.div`
   width: 40vw;
   margin: 1vw;
   box-shadow: -5px 5px 5px #000;
-  background-image: ${(props: any) => {
+  background-image: ${({ As }: { As: string }) => {
     let linearGradientArgs: any = {
       bad: "360deg, #c03, #113",
       good: "90deg, #616, #33c",
       neutral: "45deg, #999, #999",
     };
-    return "linear-gradient(" + linearGradientArgs[props.As] + ")";
+    return "linear-gradient(" + linearGradientArgs[As] + ")";
   }}};
   @media (max-width: 576px) {
     /* matches "sm" react boostrap width value */
@@ -80,17 +85,19 @@ const CharacterAlignmentBorderBox: any = styled.div`
   width: 90vw;
   }
 `;
-const QuitFormButton: any = (props: { quitFormHandler: any }) => (
+const QuitFormButton: React.FunctionComponent<{
+  quitFormHandler: React.MouseEventHandler;
+}> = (props) => (
   <Button
     id="QuitFormButton"
     onClick={props.quitFormHandler}
     children="Quit form"
   />
 );
-const DeletecharacterDataButton: any = (props: {
+const DeletecharacterDataButton: React.FunctionComponent<{
   removeCharacterHandler: Function;
   characterPosition: number;
-}) => (
+}> = (props) => (
   <Button
     variant="danger"
     onClick={() => {
@@ -103,11 +110,13 @@ const DeletecharacterDataButton: any = (props: {
 );
 interface CharacterCardProps {
   addCharacterData: Function;
-  characterData: CharacterProps | CharacterProps[];
+  characterData: CharacterProps | CharacterProps[] | null;
   removeCharacter: Function;
   position: number;
 }
-export const CharacterCard: any = (props: CharacterCardProps) => {
+export const CharacterCard: React.FunctionComponent<CharacterCardProps> = (
+  props
+) => {
   const [showCharacterForm, setShowCharacterForm] = React.useState(false);
   React.useEffect(() => {
     setShowCharacterForm(
