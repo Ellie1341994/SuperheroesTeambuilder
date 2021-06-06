@@ -1,7 +1,7 @@
 import { LoginForm } from "./LoginForm";
 import styled from "styled-components";
 import { AppName } from "../AppName";
-const Lobby: any = styled.div`
+const LoginContainer: any = styled.div`
   display: flex;
   background-color: #333;
   flex-direction: column;
@@ -11,8 +11,8 @@ const Lobby: any = styled.div`
   position: relative;
 `;
 export const LoginPage: any = ({ authContext, history }: any) => (
-  <Lobby>
-    <AppName children={"Superheroes Teambuilder"} />
+  <LoginContainer>
+    <AppName text={"Superheroes Teambuilder"} />
     <LoginForm
       history={history}
       initialValues={{
@@ -22,5 +22,5 @@ export const LoginPage: any = ({ authContext, history }: any) => (
         url: "http://challenge-react.alkemy.org",
       }}
     />
-  </Lobby>
+  </LoginContainer>
 );

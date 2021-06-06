@@ -8,7 +8,9 @@ type CharactersInTheTeamType = CharacterProps[] | CharacterProps[][] | null[];
 interface CharacterDataManagerStateProps {
   characteresInTheTeam: CharactersInTheTeamType;
 }
-interface CharacterDataManagerAttributeProps {}
+interface CharacterDataManagerAttributeProps {
+  urlParameters?: any;
+}
 /**
   @constant MAX_CHARACTERS number
   @function addCharacterHandler
@@ -36,6 +38,7 @@ export class CharacterDataManager extends React.Component<
     this.state = {
       characteresInTheTeam,
     };
+    console.log(_props.urlParameters);
   }
   componentDidUpdate() {
     localStorage.setItem(

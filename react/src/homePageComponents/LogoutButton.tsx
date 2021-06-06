@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { authenticationContext } from "../App";
+import { AuthenticationContext } from "../App";
 import { useContext } from "react";
 import { IoExitSharp } from "react-icons/io5";
 export default function LogoutButton() {
-  const context: any = useContext(authenticationContext);
+  const context: any = useContext(AuthenticationContext);
   return (
     <Link
       style={{ color: "inherit" }}
@@ -15,7 +15,7 @@ export default function LogoutButton() {
       className="bg-primary text-white p-1 rounded"
     >
       <IoExitSharp color="#fff" />
-      {window.innerWidth > 576 && "Logout"}
+      Logout
     </Link>
   );
 }

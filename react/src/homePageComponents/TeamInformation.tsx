@@ -85,7 +85,7 @@ export const TeamInformation: any = ({
     }
   }
   return (
-    <Container className="pb-3" style={{ backgroundColor: "#333" }} fluid>
+    <Container className="pb-3" fluid>
       <Container
         className="p-2 rounded-bottom"
         style={{
@@ -96,7 +96,10 @@ export const TeamInformation: any = ({
         fluid
       >
         <TeamTitle />
-        <PowerstatsList data={{ name: "", powerstats: teamPowerstats }} />
+        <PowerstatsList
+          className="bg-transparent d-flex flex-column m-0 justify-content-between w-100 h-100 pr-3 pl-3"
+          data={{ name: "", powerstats: teamPowerstats }}
+        />
         <Container
           fluid
           className="p-3 d-flex justify-content-between align-items-center"

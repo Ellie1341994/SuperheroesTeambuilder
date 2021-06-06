@@ -1,9 +1,10 @@
 import styled from "styled-components";
-export const AppName: any = styled.h1`
+import React from "react";
+export const Name: any = styled.h1`
   font-family: serif;
   text-align: center;
   padding: 1%;
-  background-color: #333;
+  margin: 0;
   background-image: linear-gradient(90deg, #f00, #3333ff);
   background-clip: text;
   -webkit-background-clip: text;
@@ -15,3 +16,10 @@ export const AppName: any = styled.h1`
     padding: 0%;
   }
 `;
+
+export const AppName: React.FC<any> = (props) => (
+  <div
+    style={{ backgroundColor: props.bgc }}
+    children={<Name className={props.className} children={props.text} />}
+  />
+);

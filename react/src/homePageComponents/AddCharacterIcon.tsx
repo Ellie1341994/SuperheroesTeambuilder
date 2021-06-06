@@ -1,6 +1,17 @@
+import React from "react";
+import styled from "styled-components";
 import icon from "./addCharacterIcon.svg";
+const Image: React.FC<any> = styled.img`
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  filter: drop-shadow(2px 3px 1px #333);
+`;
 export const AddCharacterIcon: any = (props: any) => (
-  <img onClick={props.showForm} src={icon} />
+  <Image onClick={props.showForm} src={icon} />
 );
 /*
   <svg

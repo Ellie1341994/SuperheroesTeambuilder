@@ -7,7 +7,7 @@ const TeamMembersWrapper: any = styled.div`
   justify-content: space-evenly;
   align-items: center;
   height: 100%;
-  width: 100%;
+  width: 95%;
   margin: 0;
   padding: 0;
   @media (max-width: 576px) {

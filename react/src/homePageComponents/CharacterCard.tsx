@@ -9,16 +9,6 @@ import { AddCharacterIcon } from "./AddCharacterIcon";
 import CharacterSelection from "./CharacterSelection";
 import { Transition, TransitionStatus } from "react-transition-group";
 const duration = 300;
-const characterCardContentsDefaultStyle = {
-  transition: `opacity ${duration}ms ease-in-out`,
-  opacity: 0,
-};
-const characterCardContentStyle = {
-  entering: { opacity: 0 },
-  entered: { opacity: 1 },
-  exiting: { opacity: 1 },
-  exited: { opacity: 0 },
-};
 const defaultStyle = {
   transition: `all ${duration}ms ease-in-out`,
   height: "100%",
@@ -78,11 +68,11 @@ const CharacterAlignmentBorderBox: StyledComponent<
       neutral: "45deg, #999, #999",
     };
     return "linear-gradient(" + linearGradientArgs[As] + ")";
-  }}};
+  }};
   @media (max-width: 576px) {
     /* matches "sm" react boostrap width value */
-  height: 70vw;
-  width: 90vw;
+    height: 70vw;
+    width: 90vw;
   }
 `;
 const QuitFormButton: React.FunctionComponent<{
@@ -97,15 +87,16 @@ const QuitFormButton: React.FunctionComponent<{
 const DeletecharacterDataButton: React.FunctionComponent<{
   removeCharacterHandler: Function;
   characterPosition: number;
+  className: string;
 }> = (props) => (
   <Button
-    variant="danger"
+    variant="light"
     onClick={() => {
       props.removeCharacterHandler(props.characterPosition);
     }}
-    className="text-center py-1 px-2 m-0"
+    className={props.className}
   >
-    <ImCross size={26} color="#fff" />
+    <ImCross size={26} color="#dc3545" />
   </Button>
 );
 interface CharacterCardProps {
@@ -145,56 +136,55 @@ export const CharacterCard: React.FunctionComponent<CharacterCardProps> = (
             style={{ ...defaultStyle, ...transitionStyles[state] }}
             id={"CharacterBox"}
           >
-            <Transition in={false} timeout={duration}>
-              {(state: TransitionStatus) => {
-                if (showCharacterForm) {
+            {(() => {
+              if (showCharacterForm) {
+                return (
+                  <CharacterForm
+                    initialValues={formInitialValues}
+                    characterPosition={characterPosition}
+                    addCharacterData={props.addCharacterData}
+                    inputName={inputName}
+                  >
+                    <QuitFormButton quitFormHandler={handleOnClick} />
+                  </CharacterForm>
+                );
+              } else if (!props.characterData) {
+                // DEFAULT STATE
+                return (
+                  <AddCharacterIcon
+                    showForm={handleOnClick}
+                    key={"CharacterBoxIcon"}
+                  />
+                );
+              } else {
+                // CURRENT CHARACTER
+                if (isCharacter(props.characterData)) {
                   return (
-                    <CharacterForm
-                      initialValues={formInitialValues}
-                      characterPosition={characterPosition}
-                      addCharacterData={props.addCharacterData}
-                      inputName={inputName}
-                    >
-                      <QuitFormButton quitFormHandler={handleOnClick} />
-                    </CharacterForm>
-                  );
-                } else if (!props.characterData) {
-                  // DEFAULT STATE
-                  return (
-                    <AddCharacterIcon
-                      showForm={handleOnClick}
-                      key={"CharacterBoxIcon"}
+                    <Character
+                      curriculumVitae={props.characterData}
+                      children={
+                        <DeletecharacterDataButton
+                          key={"DeletecharacterDataButton"}
+                          characterPosition={characterPosition}
+                          removeCharacterHandler={props.removeCharacter}
+                          className="text-center py-0 px-0 p-1  mr-1 w-50"
+                        />
+                      }
                     />
                   );
                 } else {
-                  // CURRENT CHARACTER
-                  if (isCharacter(props.characterData)) {
-                    return (
-                      <Character
-                        children={
-                          <DeletecharacterDataButton
-                            key={"DeletecharacterDataButton"}
-                            characterPosition={characterPosition}
-                            removeCharacterHandler={props.removeCharacter}
-                          />
-                        }
-                        curriculumVitae={props.characterData}
-                      />
-                    );
-                  } else {
-                    // CHARACTER SELECTION
-                    return (
-                      <CharacterSelection
-                        characterPosition={characterPosition}
-                        characters={props.characterData}
-                        removeCharacter={props.removeCharacter}
-                        addCharacterData={props.addCharacterData}
-                      />
-                    );
-                  }
+                  // CHARACTER SELECTION
+                  return (
+                    <CharacterSelection
+                      characterPosition={characterPosition}
+                      characters={props.characterData}
+                      removeCharacter={props.removeCharacter}
+                      addCharacterData={props.addCharacterData}
+                    />
+                  );
                 }
-              }}
-            </Transition>
+              }
+            })()}
           </CharacterBox>
         )}
       </Transition>

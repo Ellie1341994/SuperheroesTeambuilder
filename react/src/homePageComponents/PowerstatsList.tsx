@@ -1,7 +1,9 @@
 import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
-import { CharacterProps } from "./CharacterProps";
-export const PowerstatsList: any = ({ data }: { data: CharacterProps }) => {
+export const PowerstatsList: React.FC<{ data: any; className: string }> = ({
+  data,
+  className,
+}) => {
   let areValuesNumber: boolean = false;
   /** @summary Descending order */
   let orderedPowerstatsData: Array<[string, any]> = Object.entries(
@@ -41,10 +43,10 @@ export const PowerstatsList: any = ({ data }: { data: CharacterProps }) => {
   }
   return (
     <Container
-      className="overflow-scroll p-0 m-0"
+      className="p-0 m-0 h-100"
       fluid
       children={
-        <ListGroup className="bg-transparent pr-3 pl-3" variant="flush">
+        <ListGroup className={className} variant="flush">
           {powerstats}
           {weightOrHeightBox}
         </ListGroup>

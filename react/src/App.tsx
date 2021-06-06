@@ -14,7 +14,7 @@ export interface AuthContextProps {
   token: string;
   setToken: Function;
 }
-export const authenticationContext: any = createContext(null);
+export const AuthenticationContext: any = createContext(null);
 function App() {
   return (
     <ProvideAuth>
@@ -30,21 +30,25 @@ function App() {
 function ProvideAuth({ children }: any) {
   const [token, setToken] = useState(localStorage.getItem("token"));
   return (
-    <authenticationContext.Provider value={{ token, setToken }}>
+    <AuthenticationContext.Provider value={{ token, setToken }}>
       {children}
-    </authenticationContext.Provider>
+    </AuthenticationContext.Provider>
   );
 }
 function RoutePermissionController(_props: any) {
-  const authContext: AuthContextProps = useContext(authenticationContext);
-  const isAuthenticated: boolean = !!authContext?.token;
-  let pathValue: string = isAuthenticated ? "/*" : "/login";
+  const authContext: AuthContextProps = useContext(AuthenticationContext);
+  const isAuthenticated: boolean = authContext && authContext.token !== null;
+  let homePath: string =
+    "/home.:firstCharacterId?.:secondCharacterId?.:thirdCharacterId?.:fourthCharacterId?.:fifthCharacterId?.:sixthCharacterId?";
+  let loginPath: string = "/login";
+  let pathValue: string = isAuthenticated ? homePath : loginPath;
   let Component: any = isAuthenticated ? HomePage : LoginPage;
   const Routes: any = ({ location }: any) => {
     const inLoginPage: boolean = location.pathname.search("/login") >= 0;
+    const inHomePage: boolean = location.pathname.search("/home") >= 0;
     if (
       (!isAuthenticated && !inLoginPage) ||
-      (isAuthenticated && inLoginPage)
+      (isAuthenticated && !inHomePage)
     ) {
       return <Redirect to={isAuthenticated ? "/home" : "/login"} />;
     } else {
@@ -52,8 +56,10 @@ function RoutePermissionController(_props: any) {
         <Switch>
           <Route
             path={pathValue}
-            render={() => (
+            render={({ history, match }) => (
               <Component
+                history={history}
+                match={match}
                 authContext={isAuthenticated ? undefined : authContext}
               />
             )}
