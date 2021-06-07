@@ -104,6 +104,7 @@ interface CharacterCardProps {
   characterData: CharacterProps | CharacterProps[] | null;
   removeCharacter: Function;
   position: number;
+  token?: string | null;
 }
 export const CharacterCard: React.FunctionComponent<CharacterCardProps> = (
   props
@@ -140,6 +141,7 @@ export const CharacterCard: React.FunctionComponent<CharacterCardProps> = (
               if (showCharacterForm) {
                 return (
                   <CharacterForm
+                    token={props.token}
                     initialValues={formInitialValues}
                     characterPosition={characterPosition}
                     addCharacterData={props.addCharacterData}

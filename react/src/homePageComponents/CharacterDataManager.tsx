@@ -1,6 +1,7 @@
 import React from "react";
 import { Team } from "./Team";
 import { CharacterCard } from "./CharacterCard";
+import superheroApiToken from "../superheroApiToken";
 import Col from "react-bootstrap/Col";
 import { CharacterProps, isCharacter } from "./CharacterProps";
 import { TeamInformation } from "./TeamInformation";
@@ -22,7 +23,8 @@ export class CharacterDataManager extends React.Component<
   CharacterDataManagerAttributeProps,
   CharacterDataManagerStateProps
 > {
-  MAX_CHARACTERS = 6;
+  MAX_CHARACTERS: number = 6;
+  TOKEN: string | null = superheroApiToken;
   constructor(_props: CharacterDataManagerAttributeProps) {
     super(_props);
     this.addCharacterHandler = this.addCharacterHandler.bind(this);
@@ -38,7 +40,21 @@ export class CharacterDataManager extends React.Component<
     this.state = {
       characteresInTheTeam,
     };
-    console.log(_props.urlParameters);
+    //console.log(_props.urlParameters);
+    let token: string | null = superheroApiToken;
+    let isTokenValid: boolean = /\d+/.test(this.TOKEN ?? "");
+    let newToken: string | null = "";
+    //console.log("run");
+    while (!isTokenValid) {
+      // console.log("middle");
+      newToken = window.prompt(
+        "Superhero API Token missing. Add a token below"
+      );
+      token = newToken;
+      isTokenValid = window.confirm("Check the token you entered\n" + token);
+    }
+    //console.log("stop");
+    this.TOKEN = token;
   }
   componentDidUpdate() {
     localStorage.setItem(
@@ -132,6 +148,7 @@ export class CharacterDataManager extends React.Component<
         >
           {/*Cards must recieve the state directly otherwise all cards get rerendered on any modification done to any other card*/}
           <CharacterCard
+            token={this.TOKEN}
             position={position}
             characterData={this.state.characteresInTheTeam[position]}
             removeCharacter={this.removeCharacterHandler}
