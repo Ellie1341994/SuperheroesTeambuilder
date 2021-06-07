@@ -14,6 +14,15 @@ interface CharacterFormProps {
   children: any;
 }
 export const CharacterForm: any = (props: CharacterFormProps) => {
+  let token: string | null = superheroApiToken;
+  let isTokenValid: boolean = /\d+/.test(token);
+  while (!isTokenValid) {
+    let newToken: string | null = window.prompt(
+      "Superhero API Token missing. Add a token below"
+    );
+    token = newToken;
+    isTokenValid = window.confirm("Check the token you entered\n" + token);
+  }
   return (
     <Formik
       initialValues={props.initialValues}
@@ -26,7 +35,7 @@ export const CharacterForm: any = (props: CharacterFormProps) => {
       }}
       onSubmit={async function requestCharacterData(values, { setFieldError }) {
         const identifier: any = values[props.inputName];
-        const RELATIVE_BASE_SUPERHERO_URL: string = "/api/" + superheroApiToken;
+        const RELATIVE_BASE_SUPERHERO_URL: string = "/api/" + token;
         const SEARCH_SUPERHERO_URL: string =
           RELATIVE_BASE_SUPERHERO_URL + "/search/" + identifier;
         const DIRECT_SUPERHERO_URL: string =
