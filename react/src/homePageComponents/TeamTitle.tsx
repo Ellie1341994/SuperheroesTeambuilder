@@ -28,6 +28,7 @@ export default function TeamTitle() {
   }, [teamName]);
   return (
     <h2
+      className="pl-3 pr-3"
       children={
         <Form
           onSubmit={(event: React.FormEvent<HTMLFormElement>) => {

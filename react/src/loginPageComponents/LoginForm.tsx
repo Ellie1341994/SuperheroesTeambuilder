@@ -16,7 +16,7 @@ export interface AppFormProps {
   history: any;
   initialValues: LoginFormInitialValues;
 }
-const SuperheroesLoginButton: any = styled(Button)`
+const LoginButton: any = styled(Button)`
   background-image: linear-gradient(90deg, #f00, #3333ff) !important;
   border: none;
 `;
@@ -43,6 +43,9 @@ const handleLoginValidation: any = (values: LoginFormInitialValues) => {
 };
 
 export const LoginForm: any = (props: AppFormProps) => {
+  console.log(
+    `bypass logging typing localStorage.setItem("token","123") into the console`
+  );
   const handleLogin: any = async (
     values: LoginFormInitialValues,
     { setSubmitting }: any
@@ -56,6 +59,7 @@ export const LoginForm: any = (props: AppFormProps) => {
       localStorage.setItem("token", response.data.token);
       setSubmitting(false);
       values.authContext.setToken(localStorage.getItem("token"));
+      window.location.reload();
       props.history.push("/home");
     } catch (error) {
       if (error.response.status >= 400) {
@@ -133,7 +137,7 @@ export const LoginForm: any = (props: AppFormProps) => {
               </Col>
             </Form.Group>
           </Form>
-          <SuperheroesLoginButton
+          <LoginButton
             className="w-75 mt-2 shadow mx-auto"
             form="LoginForm"
             disabled={isSubmitting}

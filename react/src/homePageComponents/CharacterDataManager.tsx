@@ -5,9 +5,13 @@ import superheroApiToken from "../superheroApiToken";
 import Col from "react-bootstrap/Col";
 import { CharacterProps, isCharacter } from "./CharacterProps";
 import { TeamInformation } from "./TeamInformation";
-type CharactersInTheTeamType = CharacterProps[] | CharacterProps[][] | null[];
+export type CharactersInTheTeamType =
+  | CharacterProps[]
+  | CharacterProps[][]
+  | null[];
 interface CharacterDataManagerStateProps {
   characteresInTheTeam: CharactersInTheTeamType;
+  token: string;
 }
 interface CharacterDataManagerAttributeProps {
   urlParameters?: any;
@@ -24,13 +28,13 @@ export class CharacterDataManager extends React.Component<
   CharacterDataManagerStateProps
 > {
   MAX_CHARACTERS: number = 6;
-  TOKEN: string | null = superheroApiToken;
   constructor(_props: CharacterDataManagerAttributeProps) {
     super(_props);
     this.addCharacterHandler = this.addCharacterHandler.bind(this);
     this.removeCharacterHandler = this.removeCharacterHandler.bind(this);
     this.makeCharacterCards = this.makeCharacterCards.bind(this);
     this.removeTeamHandler = this.removeTeamHandler.bind(this);
+    this.setToken = this.setToken.bind(this);
     this.validateCharacterRequirements =
       this.validateCharacterRequirements.bind(this);
     const characteresInTheTeam: CharactersInTheTeamType = JSON.parse(
@@ -39,24 +43,11 @@ export class CharacterDataManager extends React.Component<
     );
     this.state = {
       characteresInTheTeam,
+      token: superheroApiToken,
     };
-    //console.log(_props.urlParameters);
-    let token: string | null = superheroApiToken;
-    let isTokenValid: boolean = /\d+/.test(this.TOKEN ?? "");
-    let newToken: string | null = "";
-    //console.log("run");
-    while (!isTokenValid) {
-      // console.log("middle");
-      newToken = window.prompt(
-        "Superhero API Token missing. Add a token below"
-      );
-      token = newToken;
-      isTokenValid = window.confirm("Check the token you entered\n" + token);
-    }
-    //console.log("stop");
-    this.TOKEN = token;
   }
   componentDidUpdate() {
+    console.log(this.state.token);
     localStorage.setItem(
       "userCharactersTeam",
       JSON.stringify(this.state.characteresInTheTeam)
@@ -66,6 +57,10 @@ export class CharacterDataManager extends React.Component<
    * Character must not already be a team member
    * Half the team must be bad and the other half good
    */
+  setToken(token: string) {
+    console.log("token", token);
+    this.setState({ token });
+  }
   validateCharacterRequirements(
     characterData: CharacterProps
   ): string | undefined {
@@ -148,7 +143,7 @@ export class CharacterDataManager extends React.Component<
         >
           {/*Cards must recieve the state directly otherwise all cards get rerendered on any modification done to any other card*/}
           <CharacterCard
-            token={this.TOKEN}
+            token={this.state.token}
             position={position}
             characterData={this.state.characteresInTheTeam[position]}
             removeCharacter={this.removeCharacterHandler}
@@ -166,6 +161,8 @@ export class CharacterDataManager extends React.Component<
         <TeamInformation
           removeTeamHandler={this.removeTeamHandler}
           charactersData={this.state.characteresInTheTeam}
+          setToken={this.setToken}
+          token={this.state.token}
         />
         <Team children={this.makeCharacterCards()} />
       </>

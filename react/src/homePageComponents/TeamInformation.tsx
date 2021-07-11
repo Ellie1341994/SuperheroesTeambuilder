@@ -1,15 +1,14 @@
 //import styled from "styled-components";
 import Container from "react-bootstrap/Container";
-import {
-  CharacterProps,
-  CharacterPowerstatsProps,
-  isCharacter,
-} from "./CharacterProps";
+import { CharacterPowerstatsProps, isCharacter } from "./CharacterProps";
 import TeamTitle from "./TeamTitle";
 import { PowerstatsList } from "./PowerstatsList";
 import LogoutButton from "./LogoutButton";
 import Button from "react-bootstrap/Button";
 import { GiBurningSkull } from "react-icons/gi";
+import { IoMdInformationCircleOutline } from "react-icons/io";
+import React from "react";
+import { CharactersInTheTeamType } from "./CharacterDataManager";
 /**
  *@param unitsSet strings must be metric/imperaial units ex: ["100 cm", "5'2"] ["55 kg", "65 lb"]
  *@returns either the number taken from the metric unit string or undefined if argument is not one
@@ -33,13 +32,12 @@ interface TeamPowerstats extends CharacterPowerstatsProps<number> {
   height: number;
   weight: number;
 }
-export const TeamInformation: any = ({
-  charactersData,
-  removeTeamHandler,
-}: {
-  charactersData: CharacterProps[];
+export const TeamInformation: React.FC<{
+  charactersData: CharactersInTheTeamType;
   removeTeamHandler: Function;
-}) => {
+  token: string;
+  setToken: Function;
+}> = ({ charactersData, removeTeamHandler, token, setToken }) => {
   const teamPowerstats: TeamPowerstats = {
     intelligence: 0,
     strength: 0,
@@ -50,12 +48,12 @@ export const TeamInformation: any = ({
     height: 0,
     weight: 0,
   };
-  let numberOfcharactersInTheTeam: number = charactersData.reduce(
-    (counter: number, character: CharacterProps | CharacterProps[]) => {
-      return isCharacter(character) ? counter + 1 : counter;
-    },
-    0
-  );
+  let numberOfcharactersInTheTeam: number = 0;
+  for (let character of charactersData) {
+    if (isCharacter(character)) {
+      numberOfcharactersInTheTeam++;
+    }
+  }
   if (charactersData) {
     for (let Character of charactersData) {
       if (isCharacter(Character)) {
@@ -85,12 +83,11 @@ export const TeamInformation: any = ({
     }
   }
   return (
-    <Container className="pb-3" fluid>
+    <Container className="p-0 m-0" fluid>
       <Container
-        className="p-2 rounded-bottom"
+        className="p-2 m-0 rounded-bottom"
         style={{
           backgroundColor: "white",
-          width: "95%",
           boxShadow: "-5px 5px 5px #000b",
         }}
         fluid
@@ -99,6 +96,28 @@ export const TeamInformation: any = ({
         <PowerstatsList
           className="bg-transparent d-flex flex-column m-0 justify-content-between w-100 h-100 pr-3 pl-3"
           data={{ name: "", powerstats: teamPowerstats }}
+        />
+        <Container
+          fluid
+          className="p-3 d-flex justify-content-start align-items-center"
+          children={
+            <>
+              <IoMdInformationCircleOutline
+                onClick={() =>
+                  alert("Go to https://superheroapi.com/ to get a token!")
+                }
+                color="black"
+                size="16"
+              />
+              <input
+                style={{ border: "none" }}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  setToken(event.target.value)
+                }
+                value={token}
+              />
+            </>
+          }
         />
         <Container
           fluid

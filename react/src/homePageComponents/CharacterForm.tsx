@@ -11,7 +11,7 @@ interface CharacterFormProps {
   addCharacterData: Function;
   inputName: string;
   children: any;
-  token?: string | null;
+  token: string;
 }
 export const CharacterForm: any = (props: CharacterFormProps) => {
   return (
@@ -26,7 +26,8 @@ export const CharacterForm: any = (props: CharacterFormProps) => {
       }}
       onSubmit={async function requestCharacterData(values, { setFieldError }) {
         const identifier: any = values[props.inputName];
-        const RELATIVE_BASE_SUPERHERO_URL: string = "/api/" + props.token;
+        const RELATIVE_BASE_SUPERHERO_URL: string =
+          "https://superheroapi.com/api/" + props.token;
         const SEARCH_SUPERHERO_URL: string =
           RELATIVE_BASE_SUPERHERO_URL + "/search/" + identifier;
         const DIRECT_SUPERHERO_URL: string =
@@ -36,6 +37,9 @@ export const CharacterForm: any = (props: CharacterFormProps) => {
           ? DIRECT_SUPERHERO_URL
           : SEARCH_SUPERHERO_URL;
         try {
+          if (!/^\d+$/.test(props.token)) {
+            return setFieldError(props.inputName, "Token missing!");
+          }
           const response: AxiosResponse = await axios.get(URL);
           let {
             response: responseMessage,

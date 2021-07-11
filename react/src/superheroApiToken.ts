@@ -1,2 +1,2 @@
-const superheroApiToken: string = "YOUR_SUPERHERO_API_TOKEN";
+const superheroApiToken: string = "Click here to enter your token!";
 export default superheroApiToken;

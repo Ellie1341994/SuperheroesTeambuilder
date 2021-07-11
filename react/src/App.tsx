@@ -1,12 +1,7 @@
 import { useContext, createContext, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { HelmetProvider, Helmet } from "react-helmet-async";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import "./App.css";
 import { LoginPage } from "./loginPageComponents/LoginPage";
 import { HomePage } from "./homePageComponents/HomePage";
@@ -18,12 +13,12 @@ export const AuthenticationContext: any = createContext(null);
 function App() {
   return (
     <ProvideAuth>
-      <Router>
+      <BrowserRouter>
         <HelmetProvider>
           <Helmet title="Superheroes Teambuilder" />
           <RoutePermissionController />
         </HelmetProvider>
-      </Router>
+      </BrowserRouter>
     </ProvideAuth>
   );
 }
